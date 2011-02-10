@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?><plug-in>
+    
+    <!-- Plugin Informations -->
+    <name>tagcloud</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>2.1.4</version>
+    <description>tagcloud.plugin.description</description>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
+    <provider>tagcloud.plugin.provider</provider>
+    <provider-url>http://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/tagcloud/tagcloud.png</icon-url>
+    <copyright>Copyright 2001-2009 Mairie de Paris</copyright>
+    <core-version-dependency>
+		<min-core-version>2.3.1</min-core-version>
+		<max-core-version/>	
+	</core-version-dependency>
+    <db-pool-required>1</db-pool-required>
+    
+    <!-- Specific plugin CSS stylesheets -->
+    <css-stylesheets>
+        <css-stylesheet>tagcloud/tagcloud.css</css-stylesheet>
+    </css-stylesheets>&gt;
+    
+    <admin-features>
+        <admin-feature>
+            <feature-id>TAGCLOUD_MANAGEMENT</feature-id>
+            <feature-title>tagcloud.adminFeature.tagcloud_management.name</feature-title>
+            <feature-description>tagcloud.adminFeature.tagcloud_management.description</feature-description>
+            <feature-level>3</feature-level>
+            <feature-url>jsp/admin/plugins/tagcloud/ManageTagClouds.jsp</feature-url>
+            <feature-icon-url>images/admin/skin/plugins/tagcloud/tagcloud_feature.png</feature-icon-url>
+        </admin-feature>
+    </admin-features>
+    <!-- Portlet parameters -->
+    <portlets>
+        <portlet>
+            <portlet-class>fr.paris.lutece.plugins.tagcloud.business.portlet.TagCloudPortletHome</portlet-class>
+            <portlet-type-id>TAG_CLOUD_PORTLET</portlet-type-id>
+            <portlet-type-name>tagcloud.portlet.name</portlet-type-name>
+            <portlet-creation-url>plugins/tagcloud/CreatePortletTagCloud.jsp</portlet-creation-url>
+            <portlet-update-url>plugins/tagcloud/ModifyPortletTagCloud.jsp</portlet-update-url>
+            <portlet-create-action-url>plugins/tagcloud/DoCreatePortletTagCloud.jsp</portlet-create-action-url>
+            <portlet-modify-action-url>plugins/tagcloud/DoModifyPortletTagCloud.jsp</portlet-modify-action-url>
+            <portlet-create-script-template>/admin/portlet/script_create_portlet.html</portlet-create-script-template>
+            <portlet-modify-script-template>/admin/portlet/script_modify_portlet.html</portlet-modify-script-template>
+            <portlet-create-specific-template>/admin/plugins/tagcloud/portlet/create_portlet_tagcloud.html</portlet-create-specific-template>
+            <portlet-modify-specific-template>/admin/plugins/tagcloud/portlet/modify_portlet_tagcloud.html</portlet-modify-specific-template>
+            <portlet-create-specific-form-template/>
+            <portlet-modify-specific-form-template/>
+        </portlet>
+    </portlets>
+    
+</plug-in>

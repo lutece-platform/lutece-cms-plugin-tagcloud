@@ -1,0 +1,25 @@
+<div class="content-box">	
+    
+    <h2>#i18n{tagcloud.modify_tag.pageTitle}</h2>            
+    <form method="post" action="jsp/admin/plugins/tagcloud/DoModifyTag.jsp" name="create_tag">
+        <input type="hidden" name="tagcloud_id" value="${tag.idTagCloud}" />  
+         <input type="hidden" name="tag_id" value="${tag.idTag}" />  
+        <p>
+            <label for="tag_name" >#i18n{tagcloud.create_tag.labelTagName} &nbsp;*:</label>
+            <input type="text" id="tag_name" name="tag_name"  size="50" maxlength="100" value="${tag.tagName}"/>			
+        </p>	
+        <p>
+            <label for="tag_weight" >#i18n{tagcloud.create_tag.labelTagWeight}&nbsp;:</label>
+            <@combo name="tag_weight" default_value="${tag.tagWeight}" items=list_weight />			
+        </p>				
+        <p>
+            <label for="tag_url" >#i18n{tagcloud.create_tag.labelTagUrl} &nbsp;:</label>
+            <input type="text" id="tag_url" name="tag_url"  size="50" maxlength="100" value="${tag.tagUrl}"/>			
+        </p>
+
+        <p>
+            <input type="submit" value="#i18n{tagcloud.create_tag.buttonLabelValidate}" tabindex="9" class="button" />
+            <a href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tag.idTagCloud}"><input type="button" class="button" value="#i18n{tagcloud.create_tag.backToTagCloudList}"></a>
+        </p>							 
+    </form>
+</div>	

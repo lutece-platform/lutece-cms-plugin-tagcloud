@@ -1,0 +1,15 @@
+<div class="content-box" >
+
+    <h2>#i18n{tagcloud.create_tagcloud.pageTitle}</h2>
+			       
+    <form method="post" name="create_calendar" action="jsp/admin/plugins/tagcloud/DoCreateTagCloud.jsp">		
+        <p>
+            <label for="tagcloud_name" >#i18n{tagcloud.create_tagcloud.name}&nbsp;*&nbsp;:</label>
+            <input type="text" id="tagcloud_name" name="tagcloud_name" tabindex="1" size="50" maxlength="50" />			
+        </p>
+        <p>
+            <input type="submit" value="#i18n{tagcloud.create_tagcloud.buttonLabelCreate}" tabindex="10" class="button" />
+            <input class="button" type="button" onclick="javascript:history.go(-1)" value="#i18n{portal.admin.message.buttonCancel}" />
+        </p>
+    </form>
+</div>

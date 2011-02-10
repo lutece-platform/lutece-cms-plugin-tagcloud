@@ -1,0 +1,32 @@
+<div class="content-box" >
+    <h2>#i18n{tagcloud.manage_tagcloud.tableLabel}</h2>
+    
+    <table>
+        <tr>
+            <th width="30%">#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</th>
+            <th width="10%">#i18n{tagcloud.manage_tagcloud.columnTitleActions}</th>
+        </tr>
+        
+        <#list tagcloud_list as tagcloud >
+        
+        <tr>
+            <td width="30%">
+                <a href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}" class="admin-menu">
+                    ${tagcloud.tagCloudDescription}
+                </a>
+            </td>
+            <td width="10%">
+                <a href="jsp/admin/plugins/tagcloud/RemoveTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}">
+                    <img src="images/admin/skin/actions/delete.png" alt="#i18n{tagcloud.manage_tagcloud.actionDelete}" title="#i18n{tagcloud.manage_tagcloud.actionDelete}" />
+                </a>
+            </td>
+        </tr>					
+        </#list>
+        
+    </table>
+    
+    <form method="post"  action="jsp/admin/plugins/tagcloud/CreateTagCloud.jsp">
+        <input type="submit" value="#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}" class="button" />
+    </form>
+    
+</div>
