@@ -1,44 +1,46 @@
-<div class="content-box">	
-    
-    <h2>#i18n{tagcloud.modify_tagcloud.pageTitle}</h2>
-    
-    <form method="post" action="jsp/admin/plugins/tagcloud/DoModifyTagCloud.jsp" name="modify_tagcloud">
-        <input type="hidden" name="tagcloud_id" value="${tagcloud.idTagCloud}" />        
-        <p>
-            <label for="tagcloud_name" >#i18n{tagcloud.modify_tagcloud.name}&nbsp;*&nbsp;:</label>
-            <input type="text" id="tagcloud_name" name="tagcloud_name" value="${tagcloud.tagCloudDescription}" size="50" maxlength="250" />			
-        </p>
-        <p>
-            <input type="submit" value="#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}" tabindex="9" class="button" />
-            <a href="jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud"><input type="button" class="button" value="#i18n{tagcloud.modify_tagcloud.ReturnToTagCloudList}"></a>
-        </p>							 
+<div class="row">	
+
+    <legend>#i18n{tagcloud.modify_tagcloud.pageTitle}</legend>
+
+    <form class="form-horizontal" method="post" action="jsp/admin/plugins/tagcloud/DoModifyTagCloud.jsp" name="modify_tagcloud">
+        <fieldset>
+            <input type="hidden" name="tagcloud_id" value="${tagcloud.idTagCloud}" />        
+
+            <div class="control-group">
+                <label class="control-label" for="tagcloud_name" >#i18n{tagcloud.modify_tagcloud.name}&nbsp;*&nbsp;:</label>
+                <div class="controls">
+                    <input type="text" id="tagcloud_name" name="tagcloud_name" value="${tagcloud.tagCloudDescription}" size="50" maxlength="250" />
+                </div>
+            </div>			
+            <div class="form-actions">
+
+                <button class="btn btn-primary" type="submit" >#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}</button>
+
+                <a class="btn btn-primary" href="jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud">
+                        #i18n{tagcloud.modify_tagcloud.ReturnToTagCloudList}
+                </a>
+            </div>
+
+        </fieldset>
     </form>	
-    
+
 </div>			      	
-<div class="content-box">	
-    
-    <h2>#i18n{tagcloud.modify_tagcloud.titleTagList}</h2>
-    
-    <div class="highlight-box">
-        <form method="post" action="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp">
-            <@pagination paginator=paginator />
-            
-            <!-- Number of tags per page selector -->
-	                            #i18n{tagcloud.modify_tagcloud.labelItemsPerPage} :
-            <select name="items_per_page">
-                <#list [ "10" , "20" , "50" , "100" ] as nb>
-                <#if nb_items_per_page = nb >
-                <option selected="selected" value="${nb}">${nb}</option>
-                <#else>
-                <option value="${nb}">${nb}</option>
-                </#if>
-                </#list>
-            </select>
+<div class="row">	
+    <form method="post"  action="jsp/admin/plugins/tagcloud/CreateTag.jsp">
             <input type="hidden" name="tagcloud_id" value="${tagcloud.idTagCloud}" /> 
-            <input type="submit" class="button" value="#i18n{tagcloud.modify_tagcloud.buttonItemsPerPage}" />
-        </form>
-    </div>
-    <table>
+            <input type="hidden" name="plugin_name" value="tagcloud" />   
+            <button class="btn btn-primary pull-right" type="submit" >
+                <i class="icon-plus icon-white"></i>
+                #i18n{tagcloud.modify_tagcloud.buttonCreate}
+            </button>
+    </form>    
+
+    
+    <legend>#i18n{tagcloud.modify_tagcloud.titleTagList}</legend>
+
+    <@paginationAdmin paginator=paginator combo=1 />
+
+    <table class="table table-striped table-condensed">
         <tr>
             <th>#i18n{tagcloud.modify_tagcloud.columnTagDescription}</th>
             <th>#i18n{tagcloud.modify_tagcloud.columnTagWeight}</th>
@@ -48,12 +50,7 @@
         <#list tag_list as tag >
         <tr>
             <td>
-                <a href="jsp/admin/plugins/tagcloud/ModifyTag.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud.idTagCloud}&tag_id=${tag.idTag}" class="bullet-link">
-                    
-                    <#if tag.tagName?exists>
-                    ${tag.tagName}
-                    </#if>
-                </a>
+                ${tag.tagName}
             </td>
             <td>
                 <#if tag.tagWeight?exists>
@@ -66,17 +63,18 @@
                 </#if>
             </td>
             <td>                
-                <a href="jsp/admin/plugins/tagcloud/RemoveTag.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud.idTagCloud}&tag_id=${tag.idTag}">
-                    <img src="images/admin/skin/actions/delete.png" alt="#i18n{tagcloud.modify_tagcloud.actionDeleteTag}" title="#i18n{tagcloud.modify_tagcloud.actionDeleteTag}" />
+                <a class="btn btn-primary btn-mini" href="jsp/admin/plugins/tagcloud/ModifyTag.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud.idTagCloud}&tag_id=${tag.idTag}"  title="#i18n{portal.util.labelModify}" >
+                    <i class="icon-edit icon-white"></i>
                 </a>
+                <a class="btn btn-danger btn-mini" href="jsp/admin/plugins/tagcloud/RemoveTag.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud.idTagCloud}&tag_id=${tag.idTag}"  title="#i18n{tagcloud.modify_tagcloud.actionDeleteTag}" >
+                    <i class="icon-trash icon-white"></i>
+                </a>
+
             </td>
         </tr>
         </#list>              
     </table>
-    
-    <form method="post"  action="jsp/admin/plugins/tagcloud/CreateTag.jsp">
-        <input type="hidden" name="tagcloud_id" value="${tagcloud.idTagCloud}" /> 
-        <input type="hidden" name="plugin_name" value="tagcloud" />   
-        <input type="submit" value="#i18n{tagcloud.modify_tagcloud.buttonCreate}" class="button" />
-    </form>    
+
+    <@paginationAdmin paginator=paginator />
+
 </div>

@@ -42,6 +42,7 @@ import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.web.admin.PluginAdminPageJspBean;
 import fr.paris.lutece.portal.web.constants.Messages;
+import fr.paris.lutece.portal.web.util.LocalizedPaginator;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.html.Paginator;
@@ -137,8 +138,8 @@ public class TagCloudJspBean extends PluginAdminPageJspBean
 
         HashMap model = new HashMap(  );
         List listClouds = (List) TagHome.getTagClouds( getPlugin(  ) );
-        Paginator paginator = new Paginator( listClouds, _nItemsPerPage, getHomeUrl( request ),
-                Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
+        LocalizedPaginator paginator = new LocalizedPaginator( listClouds, _nItemsPerPage, getHomeUrl( request ),
+                Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex , getLocale() );
 
         model.put( MARK_TAG_CLOUD_LIST, listClouds );
         model.put( MARK_PAGINATOR, paginator );
@@ -173,8 +174,8 @@ public class TagCloudJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_PLUGIN_NAME, PROPERTY_PLUGIN_NAME );
         url.addParameter( PARAMETER_TAG_CLOUD_ID, nCloudId );
 
-        Paginator paginator = new Paginator( listTags, _nItemsPerPage, url.getUrl(  ), Paginator.PARAMETER_PAGE_INDEX,
-                _strCurrentPageIndex );
+        LocalizedPaginator paginator = new LocalizedPaginator( listTags, _nItemsPerPage, url.getUrl(  ), Paginator.PARAMETER_PAGE_INDEX,
+                _strCurrentPageIndex , getLocale() );
         model.put( MARK_TAGCLOUD, tagCloud );
         model.put( MARK_PAGINATOR, paginator );
         model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );

@@ -1,24 +1,40 @@
-<div class="content-box">	
-    
-    <h2>#i18n{tagcloud.create_tag.pageTitle}</h2>            
-    <form method="post" action="jsp/admin/plugins/tagcloud/DoCreateTag.jsp" name="create_tag">
-        <input type="hidden" name="tagcloud_id" value="${tagcloud_id}" />   
-        <p>
-            <label for="tag_name" >#i18n{tagcloud.create_tag.labelTagName} &nbsp;*:</label>
-            <input type="text" id="tag_name" name="tag_name"  size="50" maxlength="100" />			
-        </p>	
-        <p>
-            <label for="tag_weight" >#i18n{tagcloud.create_tag.labelTagWeight}&nbsp;:</label>
-            <@combo name="tag_weight" default_value="" items=list_weight />		
-        </p>				
-        <p>
-            <label for="tag_url" >#i18n{tagcloud.create_tag.labelTagUrl} &nbsp;:</label>
-            <input type="text" id="tag_url" name="tag_url"  size="50" maxlength="100" />			
-        </p>
+<div class="row">	
 
-        <p>
-            <input type="submit" value="#i18n{tagcloud.create_tag.buttonLabelValidate}" tabindex="9" class="button" />
-            <a href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud_id}"><input type="button" class="button" value="#i18n{tagcloud.create_tag.backToTagCloudList}"></a>
-        </p>							 
+    <legend>#i18n{tagcloud.create_tag.pageTitle}</legend>            
+    <form class="form-horizontal" method="post" action="jsp/admin/plugins/tagcloud/DoCreateTag.jsp" name="create_tag">
+        <fieldset>
+            <input type="hidden" name="tagcloud_id" value="${tagcloud_id}" />   
+
+            <div class="control-group">
+                <label class="control-label" for="tag_name" >#i18n{tagcloud.create_tag.labelTagName} &nbsp;*:</label>
+                <div class="controls">
+                    <input type="text" id="tag_name" name="tag_name"  size="50" maxlength="100" />
+                </div>
+            </div>			
+
+
+            <div class="control-group">
+                <label class="control-label" for="tag_weight" >#i18n{tagcloud.create_tag.labelTagWeight}&nbsp;:</label>
+                <div class="controls">
+                    <@combo name="tag_weight" default_value="" items=list_weight />
+                </div>
+            </div>		
+
+            <div class="control-group">
+                <label class="control-label" for="tag_url" >#i18n{tagcloud.create_tag.labelTagUrl} &nbsp;:</label>
+                <div class="controls">
+                    <input type="text" id="tag_url" name="tag_url"  size="50" maxlength="100" />
+                </div>
+            </div>			
+
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit" >#i18n{tagcloud.create_tag.buttonLabelValidate}</button>
+
+                <a href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud_id}">
+                    <button class="btn btn-primary" onclick="null" >#i18n{tagcloud.create_tag.backToTagCloudList}</button>
+                </a>
+            </div>
+
+        </fieldset>
     </form>
 </div>	
