@@ -1,4 +1,19 @@
 
+--
+-- Dumping data for table core_admin_right
+--
+
+INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES 
+('TAGCLOUD_MANAGEMENT','tagcloud.adminFeature.tagcloud_management.name',3,'jsp/admin/plugins/tagcloud/ManageTagClouds.jsp','tagcloud.adminFeature.tagcloud_management.description',0,'tagcloud','CONTENT','images/admin/skin/plugins/tagcloud/tagcloud.png', NULL);
+
+--
+-- Dumping data for table core_user_right
+--
+INSERT INTO core_user_right (id_right,id_user) VALUES ('TAGCLOUD_MANAGEMENT',1);
+INSERT INTO core_user_right (id_right,id_user) VALUES ('TAGCLOUD_MANAGEMENT',2);
+
+
+
 INSERT INTO core_style (id_style, description_style, id_portlet_type, id_portal_component) VALUES 
  (1800,'Type Nuage de Tags','TAG_CLOUD_PORTLET',0);
 
