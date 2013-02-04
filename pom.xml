@@ -35,10 +35,31 @@
 		<componentName>tagcloud</componentName>
 		<jiraProjectName>TAGCLOUD</jiraProjectName>
 		<jiraComponentId>10175</jiraComponentId>
+	 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
     <scm>
         <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-tagcloud</connection>
         <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-tagcloud</developerConnection>
         <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/plugin-tagcloud</url>
     </scm>
+ <build>
+  <plugins>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>2.3.2</version>
+    <configuration>
+     <encoding>${project.build.sourceEncoding}</encoding>
+    </configuration>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-resources-plugin</artifactId>
+    <version>2.4.3</version>
+    <configuration>
+     <encoding>${project.build.sourceEncoding}</encoding>
+    </configuration>
+   </plugin>
+  </plugins>
+ </build>
 </project>
