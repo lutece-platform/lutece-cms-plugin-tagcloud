@@ -1,5 +1,4 @@
 <div class="row-fluid">	
-
     <div class="span3 well">
         <form class="form-inline spaced" method="post" action="jsp/admin/plugins/tagcloud/DoModifyTagCloud.jsp" name="modify_tagcloud">
             <fieldset>
@@ -14,10 +13,11 @@
                 </div>			
                 <div class="form-actions">
 
-                    <button class="btn btn-primary btn-small" type="submit" >#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}</button>
-
-                    <a class="btn btn-primary btn-small" href="jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud">
-                        #i18n{tagcloud.modify_tagcloud.ReturnToTagCloudList}
+                    <button class="btn btn-primary btn-small" type="submit" >
+						<i class="icon-ok icon-white"></i>&nbsp;#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}
+					</button>
+					<a class="btn btn-small" href="jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud">
+                        <i class="icon-remove-circle"></i>&nbsp;#i18n{portal.util.labelBack}
                     </a>
                 </div>
 
