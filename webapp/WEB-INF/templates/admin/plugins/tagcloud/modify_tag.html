@@ -1,40 +1,43 @@
-<div class="row-fluid">	
-
-    <legend>#i18n{tagcloud.modify_tag.pageTitle}</legend> 
-
-    <form class="form-horizontal" method="post" action="jsp/admin/plugins/tagcloud/DoModifyTag.jsp" name="create_tag">
-        <fieldset>
-            <input type="hidden" name="tagcloud_id" value="${tag.idTagCloud}" />  
-            <input type="hidden" name="tag_id" value="${tag.idTag}" />  
-
-            <div class="control-group">
-                <label class="control-label" for="tag_name" >#i18n{tagcloud.create_tag.labelTagName} &nbsp;*:</label>
-                <div class="controls">
-                    <input type="text" id="tag_name" name="tag_name"  size="50" maxlength="100" value="${tag.tagName}"/>
-                </div>
-            </div>			
-
-            <div class="control-group">
-                <label class="control-label" for="tag_weight" >#i18n{tagcloud.create_tag.labelTagWeight}&nbsp;:</label>
-                <div class="controls">
-                    <@combo name="tag_weight" default_value="${tag.tagWeight}" items=list_weight />
-                </div>
-            </div>			
-
-            <div class="control-group">
-                <label class="control-label" for="tag_url" >#i18n{tagcloud.create_tag.labelTagUrl} &nbsp;:</label>
-                <div class="controls">
-                    <input type="text" id="tag_url" name="tag_url"  size="50" maxlength="100" value="${tag.tagUrl}"/>
-                </div>
-            </div>			
-
-            <div class="form-actions">
-                <button class="btn btn-primary btn-small" type="submit" >#i18n{tagcloud.create_tag.buttonLabelValidate}</button>
-                <a class="btn btn-primary btn-small" href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tag.idTagCloud}">
-                    #i18n{tagcloud.create_tag.backToTagCloudList}
-                </a>
-            </div>
-
-        </fieldset>
-    </form>
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12">
+		<div class="box box-solid box-primary">
+			<div class="box-header">
+				<h3 class="box-title">#i18n{tagcloud.modify_tag.pageTitle}</h3>
+			</div>
+			<div class="box-body">
+				<form class="form-horizontal" method="post" action="jsp/admin/plugins/tagcloud/DoModifyTag.jsp" name="create_tag">
+					<input type="hidden" name="tagcloud_id" value="${tag.idTagCloud}">  
+					<input type="hidden" name="tag_id" value="${tag.idTag}">  
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="tag_name" >#i18n{tagcloud.create_tag.labelTagName} &nbsp;*:</label>
+						<div class="col-xs-12 col-sm-4 col-md-4">
+							<input type="text" id="tag_name" name="tag_name" class="form-control" maxlength="100" value="${tag.tagName}"/>
+						</div>
+					</div>			
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="tag_weight" >#i18n{tagcloud.create_tag.labelTagWeight}&nbsp;:</label>
+						<div class="col-xs-12 col-sm-1 col-md-1">
+							<@comboWithParams name="tag_weight" default_value="${tag.tagWeight}" additionalParameters="class=\"form-control\"" items=list_weight />
+						</div>
+					</div>			
+					<div class="form-group">
+						<label class="control-label col-xs-12 col-sm-2 col-md-2" for="tag_url" >#i18n{tagcloud.create_tag.labelTagUrl} &nbsp;:</label>
+						<div class="col-xs-12 col-sm-4 col-md-4">
+							<input type="text" id="tag_url" name="tag_url" class="form-control" maxlength="100" value="${tag.tagUrl}"/>
+						</div>
+					</div>			
+					<div class="form-group">
+						<div class="col-xs-12 col-sm-offset-2 col-sm-10 col-md-offset-2 col-md-10">
+							<button class="btn btn-primary btn-flat" type="submit" >
+								<span class="fa fa-check"></span>#i18n{tagcloud.create_tag.buttonLabelValidate}
+							</button>
+							<a class="btn btn-default btn-flat" href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tag.idTagCloud}">
+								<span class="fa fa-close"></span>#i18n{tagcloud.create_tag.backToTagCloudList}
+							</a>
+						</div>
+					</div>
+				</form>
+			</div>		
+		</div>		
+	</div>		
 </div>	
