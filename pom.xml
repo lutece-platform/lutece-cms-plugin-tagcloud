@@ -38,9 +38,9 @@
 	 <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-tagcloud</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/cms/plugin-tagcloud</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/cms/plugin-tagcloud</url>
+        <connection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-tagcloud.git</connection>
+        <developerConnection>scm:git:https://github.com/lutece-platform/lutece-cms-plugin-tagcloud.git</developerConnection>
+        <url>https://github.com/lutece-platform/lutece-cms-plugin-tagcloud.git</url>
     </scm>
  <build>
   <plugins>
