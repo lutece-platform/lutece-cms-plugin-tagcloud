@@ -94,7 +94,7 @@ public class TagCloudJspBean extends PluginAdminPageJspBean
     private static final String JSP_MODIFY_TAG_CLOUD = "jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp";
     private static final String JSP_MODIFY_HOME = "ModifyTagCloud.jsp";
     private static final String MARK_TAG_LIST = "tag_list";
-    private static final String MARK_TAG = "tag";
+    private static final String MARK_TAG = "tagObject";
     private static final String PROPERTY_TAGS_PER_PAGE = "tagcloud.eventsPerPage";
     private static final String PARAMETER_PLUGIN_NAME = "plugin_name";
     private static final String PARAMETER_TAG_CLOUD_NAME = "tagcloud_name";
