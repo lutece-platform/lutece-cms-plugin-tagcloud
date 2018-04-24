@@ -2,7 +2,13 @@
 # Plugin Tag Cloud
 
 ## Introduction
-This plugin allows you to create portlets representing tag clouds. Each tag is associated with an URL and its size can range from 1 to 10according to its importance.The cloud configuration is done in the BackOffice by entering the tags, their size and their associated link.The publication of the cloud is done through the Site Administration feature by adding a portlet of type "Tag Cloud" and selecting the cloud to display.
+
+This plugin allows you to create portlets representing tag clouds. Each tag is associated with an URL and its size can range from 1 to 10according to its importance.
+
+The cloud configuration is done in the BackOffice by entering the tags, their size and their associated link.
+
+The publication of the cloud is done through the Site Administration feature by adding a portlet of type "Tag Cloud" and selecting the cloud to display.
+
 
 [Maven documentation and reports](http://dev.lutece.paris.fr/plugins/plugin-tagcloud/)
 
