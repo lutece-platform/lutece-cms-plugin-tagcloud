@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Plugin</title>
-	</properties>
-	<body>
-		<section name="Plugin">
-			<subsection name="Introduction">
-			</subsection>
-		</section>
-	</body>
+    <properties>
+        <title>Plugin Tag Cloud</title>
+    </properties>
+    <body>
+        <section name="Plugin Tag Cloud">
+            <subsection name="Introduction">
+                Ce plugin permet de créer des portlets représentant des nuages de Tags.
+                Chaque tag ou étiquette est associé à une URL et sa taille peut aller de 1 à 10
+                en fonction de son importance.
+                
+                    
+                </br>
+                La configuration des nuages se fait dans le BackOffice en saisisant les étiquettes, leur taille et leur lien associé.
+                <br/>
+                La publication du nuage se fait au travers de la fonction d'Administration du site en ajoutant un portlet de type "Nuage de tags" et en sélectionnant le nuage à afficher.
+                
+            </subsection>
+        </section>
+    </body>
 </document>
