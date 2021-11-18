@@ -1,41 +1,30 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12">
-		<div class="box box-primary">
-			<div class="box-header">
-				<h3 class="box-title">#i18n{tagcloud.manage_tagcloud.tableLabel}</h3>
-				<div class="box-tools pull-right">
-					<form method="post" class="form-inline"  action="jsp/admin/plugins/tagcloud/CreateTagCloud.jsp">
-						<button class="btn btn-primary btn-xs btn-flat" type="submit" >
-							<i class="fa fa-plus"></i>
-							<span class="hidden-xs">#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}</span>
-						</button>
-					</form>
-				</div>
-			</div>
-			<div class="box-body table-responsive">
-				<table class="table table-hover table-condensed">
-					<tr>
-						<th>#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</th>
-						<th>#i18n{tagcloud.manage_tagcloud.columnTitleActions}</th>
-					</tr>
+<@row>
+	<@columns>
+		<@box>
+			<@boxHeader title='#i18n{tagcloud.manage_tagcloud.tableLabel}'>
+				<@tform method='post' type='inline' action='jsp/admin/plugins/tagcloud/CreateTagCloud.jsp'>
+					<@button type='submit' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' hideTitle=['all'] buttonIcon='plus-circle' size='sm' />
+				</@tform>
+			</@boxHeader>
+			<@boxBody>
+				<@table>
+					<@tr>
+						<@th>#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</@th>
+						<@th>#i18n{tagcloud.manage_tagcloud.columnTitleActions}</@th>
+					</@tr>
 					<#list tagcloud_list as tagcloud >
-					<tr>
-						<td>
+					<@tr>
+						<@td>
 							${tagcloud.tagCloudDescription}
-						</td>
-						<td>
-							<a class="btn btn-primary btn-xs btn-flat" href="jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}"  title="#i18n{portal.util.labelModify}" >
-								<i class="fa fa-pencil"></i>
-							</a>
-							<a class="btn btn-danger btn-xs btn-flat" href="jsp/admin/plugins/tagcloud/RemoveTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}"  title="#i18n{tagcloud.manage_tagcloud.actionDelete}" >
-								<i class="fa fa-trash"></i>
-							</a>
-						</td>
-					</tr>					
+						</@td>
+						<@td>
+							<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='edit' size='sm' />
+							<@aButton href='jsp/admin/plugins/tagcloud/RemoveTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' hideTitle=['all'] buttonIcon='trash' color='danger' size='sm' />
+						</@td>
+					</@tr>					
 					</#list>
-				</table>
-
-			</div>
-		</div>
-	</div>
-</div>
+				</@table>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
