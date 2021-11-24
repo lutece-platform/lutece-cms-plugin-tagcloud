@@ -51,7 +51,11 @@ public class RandomTagServiceTest  extends LuteceTestCase{
 	 * Transform.
 	 */
 	@Test
+<<<<<<< HEAD
 	public void transform()
+=======
+	void transform()
+>>>>>>> 7660d3c66a5297d3039761144b16f08903888242
 	{
 		
 	    ArrayList<Tag> testTags=new ArrayList<Tag>();
