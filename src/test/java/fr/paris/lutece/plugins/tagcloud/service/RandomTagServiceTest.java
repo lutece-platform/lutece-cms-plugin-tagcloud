@@ -51,8 +51,7 @@ public class RandomTagServiceTest  extends LuteceTestCase{
 	 * Transform.
 	 */
 	@Test
-
-	public void transform()
+	public void testTransform()
 	{
 		
 	    ArrayList<Tag> testTags=new ArrayList<Tag>();
