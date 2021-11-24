@@ -11,7 +11,7 @@
                 en fonction de son importance.
                 
                     
-                </br>
+                <br/>
                 La configuration des nuages se fait dans le BackOffice en saisisant les étiquettes, leur taille et leur lien associé.
                 <br/>
                 La publication du nuage se fait au travers de la fonction d'Administration du site en ajoutant un portlet de type "Nuage de tags" et en sélectionnant le nuage à afficher.
