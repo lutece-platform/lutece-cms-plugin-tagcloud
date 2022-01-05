@@ -1,7 +1,7 @@
 <@row>
 	<@columns>
 		<@box>
-			<@boxHeader title='#i18n{tagcloud.create_tag.pageTitle}' />
+			<@boxHeader title='#i18n{tagcloud.create_tag.pageTitle}' skipHeader=true />
 			<@boxBody>
 				<@tform method='post' action='jsp/admin/plugins/tagcloud/DoCreateTag.jsp' name='create_tag'>
 					<@input type='hidden' name='tagcloud_id' value='${tagcloud_id}' />   
@@ -15,8 +15,8 @@
 						<@input type='text' id='tag_url' name='tag_url' maxlength=100 />
 					</@formGroup>
 					<@formGroup>
-						<@button type='submit' title='#i18n{tagcloud.create_tag.buttonLabelValidate}' buttonIcon='save' />
-						<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud_id}' title='#i18n{tagcloud.create_tag.backToTagCloudList}' buttonIcon='times' color='default' />
+						<@button type='submit' title='#i18n{tagcloud.create_tag.buttonLabelValidate}' buttonIcon='save' size='' />
+						<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tagcloud_id}' title='#i18n{tagcloud.create_tag.backToTagCloudList}' buttonIcon='times' color='default'  size='' />
 					</@formGroup>
 				</@tform>
 			</@boxBody>

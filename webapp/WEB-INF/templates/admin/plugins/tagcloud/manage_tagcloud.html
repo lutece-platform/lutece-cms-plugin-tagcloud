@@ -1,9 +1,9 @@
 <@row>
 	<@columns>
 		<@box>
-			<@boxHeader title='#i18n{tagcloud.manage_tagcloud.tableLabel}'>
+			<@boxHeader title='#i18n{tagcloud.manage_tagcloud.tableLabel}' skipHeader=true>
 				<@tform method='post' type='inline' action='jsp/admin/plugins/tagcloud/CreateTagCloud.jsp'>
-					<@button type='submit' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' hideTitle=['all'] buttonIcon='plus-circle' size='sm' />
+					<@button type='submit' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' buttonIcon='plus' />
 				</@tform>
 			</@boxHeader>
 			<@boxBody>
@@ -14,9 +14,7 @@
 					</@tr>
 					<#list tagcloud_list as tagcloud >
 					<@tr>
-						<@td>
-							${tagcloud.tagCloudDescription}
-						</@td>
+						<@td>${tagcloud.tagCloudDescription}</@td>
 						<@td>
 							<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='edit' size='sm' />
 							<@aButton href='jsp/admin/plugins/tagcloud/RemoveTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' hideTitle=['all'] buttonIcon='trash' color='danger' size='sm' />

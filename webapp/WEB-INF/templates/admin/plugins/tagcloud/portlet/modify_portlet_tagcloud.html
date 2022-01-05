@@ -1,4 +1,8 @@
-<p>
-    <label>#i18n{tagcloud.modify_portlet_tagcloud.labelCloud}</label>
-    @combo_clouds@
-</p>
+
+<@row>
+    <@columns>
+        <@formGroup labelKey='#i18n{tagcloud.modify_portlet_tagcloud.labelCloud}' labelFor='tagcloud_id' rows=2>
+            @combo_clouds@
+        </@formGroup>
+    </@columns>
+</@row>

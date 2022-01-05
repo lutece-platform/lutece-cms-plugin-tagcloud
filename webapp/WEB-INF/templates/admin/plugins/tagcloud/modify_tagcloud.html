@@ -1,27 +1,26 @@
 <@row>
 	<@columns>
 		<@box>
-			<@boxHeader title='#i18n{tagcloud.modify_tagcloud.pageTitle}'>
-				<@tform method='post' action='jsp/admin/plugins/tagcloud/CreateTag.jsp'>
+			<@boxHeader title='#i18n{tagcloud.modify_tagcloud.pageTitle}' skipHeader=true >
+				<@tform method='post' type='inline' action='jsp/admin/plugins/tagcloud/DoModifyTagCloud.jsp' name='modify_tagcloud'>
+					<@input type='hidden' name='tagcloud_id' value='${tagcloud.idTagCloud}' />
+					<@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.modify_tagcloud.name}' mandatory=true hideLabel=['all'] formStyle='inline'>
+						<@inputGroup size='sm'>
+							<@input type='text' id='tagcloud_name' name='tagcloud_name' value='${tagcloud.tagCloudDescription}' size='sm' maxlength=250 />
+							<@inputGroupItem type='btn'>
+								<@button type='submit' title='#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}' buttonIcon='save' color='primary' />
+							</@inputGroupItem>
+						</@inputGroup>
+					</@formGroup>
+				</@tform>
+				<@tform method='post' type='inline' action='jsp/admin/plugins/tagcloud/CreateTag.jsp'>
 					<@input type='hidden' name='tagcloud_id' value='${tagcloud.idTagCloud}' /> 
 					<@input type='hidden' name='plugin_name' value='tagcloud' />
-					<@button type='submit' title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' hideTitle=['all'] buttonIcon='plus-square' size='sm' />
+					<@button type='submit' title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' buttonIcon='plus' />
 				</@tform>
 			</@boxHeader>
 			<@boxBody>
-				<@tform method='post' action='jsp/admin/plugins/tagcloud/DoModifyTagCloud.jsp' name='modify_tagcloud'>
-					<@input type='hidden' name='tagcloud_id' value='${tagcloud.idTagCloud}' />
-					<@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.modify_tagcloud.name}' mandatory=true>
-						<@input type='text' id='tagcloud_name' name='tagcloud_name' value='${tagcloud.tagCloudDescription}' maxlength=250 />
-					</@formGroup>
-					<@formGroup>
-						<@button type='submit' title='#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}' buttonIcon='save' />
-						<@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud' title='#i18n{portal.util.labelBack}' color='default' />
-					</@formGroup>
-				</@tform>	
-				
 				<h3>#i18n{tagcloud.modify_tagcloud.titleTagList}</h3>
-				<@paginationAdmin paginator=paginator combo=1 />
 				<@table>
 					<@tr>
 						<@th>#i18n{tagcloud.modify_tagcloud.columnTagDescription}</@th>
@@ -51,7 +50,7 @@
 					</@tr>
 					</#list>              
 				</@table>
-				<@paginationAdmin paginator=paginator />
+				<@paginationAdmin paginator=paginator combo=1 />
 			</@boxBody>
 		</@box>
 	</@columns>

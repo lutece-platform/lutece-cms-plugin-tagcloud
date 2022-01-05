@@ -1,7 +1,7 @@
 <@row>
 	<@columns>
 		<@box>
-			<@boxHeader title='#i18n{tagcloud.create_tagcloud.pageTitle}' />
+			<@boxHeader title='#i18n{tagcloud.create_tagcloud.pageTitle}' skipHeader=true/>
 			<@boxBody>
 				<@tform method='post' name='create_calendar' action='jsp/admin/plugins/tagcloud/DoCreateTagCloud.jsp'>
 					<@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.create_tagcloud.name}' mandatory=true>
