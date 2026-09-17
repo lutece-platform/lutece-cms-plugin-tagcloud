@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset tagcloud:init_tagcloud_sample.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Data for the table tagcloud 
 --

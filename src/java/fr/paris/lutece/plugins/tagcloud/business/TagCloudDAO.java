@@ -40,10 +40,13 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 
 /**
  * This class provides Data Access methods for tag objects
  */
+@ApplicationScoped
 public final class TagCloudDAO implements ITagDAO
 {
     // Constants
@@ -68,19 +71,20 @@ public final class TagCloudDAO implements ITagDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+         int nKey;
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
-        }
+            daoUtil.executeQuery(  );
 
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+        }
 
         return nKey;
     }
@@ -92,19 +96,20 @@ public final class TagCloudDAO implements ITagDAO
      */
     public int newPrimaryKeyTagCloud( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK_TAGCLOUD, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+         int nKey;
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK_TAGCLOUD, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
-        }
+            daoUtil.executeQuery(  );
 
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+        }
 
         return nKey;
     }
@@ -116,18 +121,19 @@ public final class TagCloudDAO implements ITagDAO
      */
     public void insert( Tag tag, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
 
-        tag.setIdTag( newPrimaryKey( plugin ) );
+            tag.setIdTag( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, tag.getIdTagCloud(  ) );
-        daoUtil.setInt( 2, tag.getIdTag(  ) );
-        daoUtil.setString( 3, tag.getTagName(  ) );
-        daoUtil.setString( 4, tag.getTagWeight(  ) );
-        daoUtil.setString( 5, tag.getTagUrl(  ) );
+            daoUtil.setInt( 1, tag.getIdTagCloud(  ) );
+            daoUtil.setInt( 2, tag.getIdTag(  ) );
+            daoUtil.setString( 3, tag.getTagName(  ) );
+            daoUtil.setString( 4, tag.getTagWeight(  ) );
+            daoUtil.setString( 5, tag.getTagUrl(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -139,25 +145,26 @@ public final class TagCloudDAO implements ITagDAO
      */
     public Tag load( int nCloudId, int nTagId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nCloudId );
-        daoUtil.setInt( 2, nTagId );
-        daoUtil.executeQuery(  );
-
-        Tag tag = null;
-
-        if ( daoUtil.next(  ) )
+         Tag tag = null;
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            tag = new Tag(  );
+            daoUtil.setInt( 1, nCloudId );
+            daoUtil.setInt( 2, nTagId );
+            daoUtil.executeQuery(  );
 
-            tag.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tag.setIdTag( daoUtil.getInt( 2 ) );
-            tag.setTagName( daoUtil.getString( 3 ) );
-            tag.setTagWeight( daoUtil.getString( 4 ) );
-            tag.setTagUrl( daoUtil.getString( 5 ) );
+
+            if ( daoUtil.next(  ) )
+            {
+                tag = new Tag(  );
+
+                tag.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tag.setIdTag( daoUtil.getInt( 2 ) );
+                tag.setTagName( daoUtil.getString( 3 ) );
+                tag.setTagWeight( daoUtil.getString( 4 ) );
+                tag.setTagUrl( daoUtil.getString( 5 ) );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tag;
     }
@@ -170,27 +177,28 @@ public final class TagCloudDAO implements ITagDAO
      */
     public ArrayList<Tag> loadByCloud( int nCloudId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_CLOUD, plugin );
-        daoUtil.setInt( 1, nCloudId );
-        daoUtil.executeQuery(  );
-
-        ArrayList<Tag> tagList = new ArrayList<Tag>(  );
-        Tag tag = null;
-
-        while ( daoUtil.next(  ) )
+         ArrayList<Tag> tagList = new ArrayList<Tag>(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_CLOUD, plugin ) )
         {
-            tag = new Tag(  );
+            daoUtil.setInt( 1, nCloudId );
+            daoUtil.executeQuery(  );
 
-            tag.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tag.setIdTag( daoUtil.getInt( 2 ) );
-            tag.setTagName( daoUtil.getString( 3 ) );
-            tag.setTagWeight( daoUtil.getString( 4 ) );
-            tag.setTagUrl( daoUtil.getString( 5 ) );
+            Tag tag = null;
 
-            tagList.add( tag );
+            while ( daoUtil.next(  ) )
+            {
+                tag = new Tag(  );
+
+                tag.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tag.setIdTag( daoUtil.getInt( 2 ) );
+                tag.setTagName( daoUtil.getString( 3 ) );
+                tag.setTagWeight( daoUtil.getString( 4 ) );
+                tag.setTagUrl( daoUtil.getString( 5 ) );
+
+                tagList.add( tag );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tagList;
     }
@@ -203,11 +211,12 @@ public final class TagCloudDAO implements ITagDAO
      */
     public void deleteTag( int nTagId, int nCloudId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_TAG, plugin );
-        daoUtil.setInt( 1, nTagId );
-        daoUtil.setInt( 2, nCloudId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_TAG, plugin ) )
+        {
+            daoUtil.setInt( 1, nTagId );
+            daoUtil.setInt( 2, nCloudId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -217,17 +226,18 @@ public final class TagCloudDAO implements ITagDAO
      */
     public void store( Tag tag, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        //Error
-        daoUtil.setInt( 1, tag.getIdTagCloud(  ) );
-        daoUtil.setInt( 2, tag.getIdTag(  ) );
-        daoUtil.setString( 3, tag.getTagName(  ) );
-        daoUtil.setString( 4, tag.getTagWeight(  ) );
-        daoUtil.setString( 5, tag.getTagUrl(  ) );
-        daoUtil.setInt( 6, tag.getIdTagCloud(  ) );
-        daoUtil.setInt( 7, tag.getIdTag(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+            //Error
+            daoUtil.setInt( 1, tag.getIdTagCloud(  ) );
+            daoUtil.setInt( 2, tag.getIdTag(  ) );
+            daoUtil.setString( 3, tag.getTagName(  ) );
+            daoUtil.setString( 4, tag.getTagWeight(  ) );
+            daoUtil.setString( 5, tag.getTagUrl(  ) );
+            daoUtil.setInt( 6, tag.getIdTagCloud(  ) );
+            daoUtil.setInt( 7, tag.getIdTag(  ) );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -238,23 +248,24 @@ public final class TagCloudDAO implements ITagDAO
     public Collection<Tag> selectTagList( Plugin plugin )
     {
         Collection<Tag> tagList = new ArrayList<Tag>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Tag tag = new Tag(  );
+            daoUtil.executeQuery(  );
 
-            tag.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tag.setIdTag( daoUtil.getInt( 2 ) );
-            tag.setTagName( daoUtil.getString( 3 ) );
-            tag.setTagWeight( daoUtil.getString( 4 ) );
-            tag.setTagUrl( daoUtil.getString( 5 ) );
+            while ( daoUtil.next(  ) )
+            {
+                Tag tag = new Tag(  );
 
-            tagList.add( tag );
+                tag.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tag.setIdTag( daoUtil.getInt( 2 ) );
+                tag.setTagName( daoUtil.getString( 3 ) );
+                tag.setTagWeight( daoUtil.getString( 4 ) );
+                tag.setTagUrl( daoUtil.getString( 5 ) );
+
+                tagList.add( tag );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tagList;
     }
@@ -267,20 +278,21 @@ public final class TagCloudDAO implements ITagDAO
     public Collection<TagCloud> selectTagClouds( Plugin plugin )
     {
         Collection<TagCloud> tagCloudList = new ArrayList<TagCloud>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUDS, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUDS, plugin ) )
         {
-            TagCloud tagCloud = new TagCloud(  );
+            daoUtil.executeQuery(  );
 
-            tagCloud.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tagCloud.setTagCloudDescription( daoUtil.getString( 2 ) );
+            while ( daoUtil.next(  ) )
+            {
+                TagCloud tagCloud = new TagCloud(  );
 
-            tagCloudList.add( tagCloud );
+                tagCloud.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tagCloud.setTagCloudDescription( daoUtil.getString( 2 ) );
+
+                tagCloudList.add( tagCloud );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tagCloudList;
     }
@@ -293,20 +305,21 @@ public final class TagCloudDAO implements ITagDAO
      */
     public TagCloud selectCloudById( int nCloudId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUD_BY_ID, plugin );
-        daoUtil.setInt( 1, nCloudId );
-        daoUtil.executeQuery(  );
-
-        TagCloud tagCloud = null;
-
-        if ( daoUtil.next(  ) )
+         TagCloud tagCloud = null;
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUD_BY_ID, plugin ) )
         {
-            tagCloud = new TagCloud(  );
-            tagCloud.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tagCloud.setTagCloudDescription( daoUtil.getString( 2 ) );
-        }
+            daoUtil.setInt( 1, nCloudId );
+            daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+
+            if ( daoUtil.next(  ) )
+            {
+                tagCloud = new TagCloud(  );
+                tagCloud.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tagCloud.setTagCloudDescription( daoUtil.getString( 2 ) );
+            }
+
+        }
 
         return tagCloud;
     }
@@ -318,14 +331,15 @@ public final class TagCloudDAO implements ITagDAO
      */
     public void insert( TagCloud tagCloud, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_TAG_CLOUD, plugin );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_TAG_CLOUD, plugin ) )
+        {
 
-        tagCloud.setIdTagCloud( newPrimaryKeyTagCloud( plugin ) );
+            tagCloud.setIdTagCloud( newPrimaryKeyTagCloud( plugin ) );
 
-        daoUtil.setInt( 1, tagCloud.getIdTagCloud(  ) );
-        daoUtil.setString( 2, tagCloud.getTagCloudDescription(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.setInt( 1, tagCloud.getIdTagCloud(  ) );
+            daoUtil.setString( 2, tagCloud.getTagCloudDescription(  ) );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -335,13 +349,14 @@ public final class TagCloudDAO implements ITagDAO
     */
     public void store( TagCloud tagCloud, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_TAGCLOUD, plugin );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE_TAGCLOUD, plugin ) )
+        {
 
-        daoUtil.setInt( 1, tagCloud.getIdTagCloud(  ) );
-        daoUtil.setString( 2, tagCloud.getTagCloudDescription(  ) );
-        daoUtil.setInt( 3, tagCloud.getIdTagCloud(  ) );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.setInt( 1, tagCloud.getIdTagCloud(  ) );
+            daoUtil.setString( 2, tagCloud.getTagCloudDescription(  ) );
+            daoUtil.setInt( 3, tagCloud.getIdTagCloud(  ) );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -351,10 +366,11 @@ public final class TagCloudDAO implements ITagDAO
     */
     public void deleteCloud( int nCloudId, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_CLOUD, plugin );
-        daoUtil.setInt( 1, nCloudId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_CLOUD, plugin ) )
+        {
+            daoUtil.setInt( 1, nCloudId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -365,18 +381,19 @@ public final class TagCloudDAO implements ITagDAO
     public ReferenceList selectAllTagClouds( Plugin plugin )
     {
         ReferenceList listClouds = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUDS, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_CLOUDS, plugin ) )
         {
-            TagCloud tag = new TagCloud(  );
-            tag.setIdTagCloud( daoUtil.getInt( 1 ) );
-            tag.setTagCloudDescription( daoUtil.getString( 2 ) );
-            listClouds.addItem( tag.getIdTagCloud(  ), tag.getTagCloudDescription(  ) );
-        }
+            daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+            while ( daoUtil.next(  ) )
+            {
+                TagCloud tag = new TagCloud(  );
+                tag.setIdTagCloud( daoUtil.getInt( 1 ) );
+                tag.setTagCloudDescription( daoUtil.getString( 2 ) );
+                listClouds.addItem( tag.getIdTagCloud(  ), tag.getTagCloudDescription(  ) );
+            }
+
+        }
 
         return listClouds;
     }

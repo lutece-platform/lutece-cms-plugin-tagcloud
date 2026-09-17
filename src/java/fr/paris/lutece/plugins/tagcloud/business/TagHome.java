@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.tagcloud.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 import fr.paris.lutece.util.ReferenceList;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.Collection;
 public final class TagHome
 {
     // Static variable pointed at the DAO instance
-    private static ITagDAO _dao = (ITagDAO) SpringContextService.getPluginBean( "tagcloud", "tagsDAO" );
+    private static ITagDAO _dao = CDI.current( ).select( ITagDAO.class ).get( );
 
     /**
      * Private constructor - this class needs not be instantiated

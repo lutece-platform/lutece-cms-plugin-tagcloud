@@ -1,28 +1,28 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{tagcloud.manage_tagcloud.tableLabel}' skipHeader=true>
-				<@tform method='post' type='inline' action='jsp/admin/plugins/tagcloud/CreateTagCloud.jsp'>
-					<@button type='submit' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' buttonIcon='plus' />
-				</@tform>
-			</@boxHeader>
-			<@boxBody>
-				<@table>
-					<@tr>
-						<@th>#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</@th>
-						<@th>#i18n{tagcloud.manage_tagcloud.columnTitleActions}</@th>
-					</@tr>
-					<#list tagcloud_list as tagcloud >
-					<@tr>
-						<@td>${tagcloud.tagCloudDescription}</@td>
-						<@td>
-							<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{portal.util.labelModify}' hideTitle=['all'] buttonIcon='edit' size='sm' />
-							<@aButton href='jsp/admin/plugins/tagcloud/RemoveTagCloud.jsp?tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' hideTitle=['all'] buttonIcon='trash' color='danger' size='sm' />
-						</@td>
-					</@tr>					
-					</#list>
-				</@table>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{tagcloud.manage_tagcloud.page_title}'>
+            <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=createTagCloud' buttonIcon='plus' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' color='primary' />
+        </@pageHeader>
+        <@messages infos=infos![] errors=errors![] warnings=warnings![] />
+        <#if tagcloud_list?has_content>
+            <@table>
+                <tr>
+                    <th>#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</th>
+                    <th>#i18n{tagcloud.manage_tagcloud.columnTitleActions}</th>
+                </tr>
+                <#list tagcloud_list as tagcloud>
+                <tr>
+                    <td>${tagcloud.tagCloudDescription!}</td>
+                    <td>
+                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='edit' title='#i18n{portal.util.labelModify}' />
+                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTagCloud&tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' />
+                    </td>
+                </tr>
+                </#list>
+            </@table>
+            <@paginationAdmin paginator=paginator combo=1 />
+        <#else>
+            <@empty title='#i18n{portal.util.labelNoItem}' />
+        </#if>
+    </@pageColumn>
+</@pageContainer>

@@ -1,10 +1,9 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
 
+${ pageContext.setAttribute( 'strContent', tagCloudJspBean.processController( pageContext.request , pageContext.response ) ) }
+
 <jsp:include page="../../AdminHeader.jsp" />
 
-<jsp:useBean id="tagcloud" scope="session" class="fr.paris.lutece.plugins.tagcloud.web.TagCloudJspBean" />
-
-<% tagcloud.init( request, tagcloud.RIGHT_MANAGE_TAGCLOUD ); %>
-<%= tagcloud.getManageTagClouds ( request ) %>
+${ pageContext.getAttribute( 'strContent' ) }
 
 <%@ include file="../../AdminFooter.jsp" %>

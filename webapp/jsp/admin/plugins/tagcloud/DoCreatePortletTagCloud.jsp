@@ -1,8 +1,7 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
 
-<jsp:useBean id="tagCloudPortlet" scope="session" class="fr.paris.lutece.plugins.tagcloud.web.portlet.TagCloudPortletJspBean" />
+<%@page import="fr.paris.lutece.plugins.tagcloud.web.portlet.TagCloudPortletJspBean"%>
 
-<%
-    tagCloudPortlet.init( request, tagCloudPortlet.RIGHT_MANAGE_ADMIN_SITE );
-    response.sendRedirect( tagCloudPortlet.doCreate( request ) );
-%>
+${ tagCloudPortletJspBean.init( pageContext.request, TagCloudPortletJspBean.RIGHT_MANAGE_ADMIN_SITE ) }
+${ pageContext.response.sendRedirect( tagCloudPortletJspBean.doCreate( pageContext.request ) ) }
+
