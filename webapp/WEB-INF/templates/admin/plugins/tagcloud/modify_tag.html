@@ -1,26 +1,26 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{tagcloud.modify_tag.pageTitle}' skipHeader=true />
-			<@boxBody>
-				<@tform method='post' action='jsp/admin/plugins/tagcloud/DoModifyTag.jsp' name='create_tag'>
-					<@input type='hidden' name='tagcloud_id' value='${tagObject.idTagCloud}' />  
-					<@input type='hidden' name='tag_id' value='${tagObject.idTag}' />  
-					<@formGroup labelFor='tag_name' labelKey='#i18n{tagcloud.create_tag.labelTagName}' mandatory=true>
-						<@input type='text' id='tag_name' name='tag_name' maxlength=100 value='${tagObject.tagName}' />
-					</@formGroup>
-					<@formGroup labelFor='tag_weight' labelKey='#i18n{tagcloud.create_tag.labelTagWeight}'>
-						<@select name='tag_weight' default_value='${tagObject.tagWeight}' items=list_weight />
-					</@formGroup>
-					<@formGroup labelFor='tag_url' labelKey='#i18n{tagcloud.create_tag.labelTagUrl}'>
-						<@input type='text' id='tag_url' name='tag_url' maxlength=100 value='${tagObject.tagUrl}' />
-					</@formGroup>
-					<@formGroup>
-						<@button type='submit' title='#i18n{tagcloud.create_tag.buttonLabelValidate}' buttonIcon='save' size='' />
-						<@aButton href='jsp/admin/plugins/tagcloud/ModifyTagCloud.jsp?plugin_name=tagcloud&tagcloud_id=${tagObject.idTagCloud}' title='#i18n{tagcloud.create_tag.backToTagCloudList}' buttonIcon='times' color='default'  size=''/>
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{tagcloud.modify_tag.pageTitle}'>
+            <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagObject.idTagCloud}' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' />
+        </@pageHeader>
+        <@messages errors=errors![] />
+        <@tform method='post' name='modify_tag' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp' boxed=true>
+            <@input type='hidden' name='action' value='modifyTag' />
+            <@input type='hidden' name='tagcloud_id' value='${tagObject.idTagCloud}' />
+            <@input type='hidden' name='tag_id' value='${tagObject.idTag}' />
+            <@formGroup labelFor='tag_name' labelKey='#i18n{tagcloud.create_tag.labelTagName}' mandatory=true rows=2>
+                <@input type='text' name='tag_name' id='tag_name' value='${tagObject.tagName!}' maxlength=100 mandatory=true />
+            </@formGroup>
+            <@formGroup labelFor='tag_weight' labelKey='#i18n{tagcloud.create_tag.labelTagWeight}' rows=2>
+                <@select name='tag_weight' id='tag_weight' default_value='${tagObject.tagWeight!}' items=list_weight />
+            </@formGroup>
+            <@formGroup labelFor='tag_url' labelKey='#i18n{tagcloud.create_tag.labelTagUrl}' rows=2>
+                <@input type='text' name='tag_url' id='tag_url' value='${tagObject.tagUrl!}' maxlength=100 />
+            </@formGroup>
+            <@formGroup rows=2>
+                <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.modify_tag.buttonModify}' color='primary' />
+                <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagObject.idTagCloud}' buttonIcon='x' title='#i18n{tagcloud.modify_tag.backToTagCloudList}' />
+            </@formGroup>
+        </@tform>
+    </@pageColumn>
+</@pageContainer>

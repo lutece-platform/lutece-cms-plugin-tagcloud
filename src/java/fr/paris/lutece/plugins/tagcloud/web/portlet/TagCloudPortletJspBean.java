@@ -36,24 +36,39 @@ package fr.paris.lutece.plugins.tagcloud.web.portlet;
 import fr.paris.lutece.plugins.tagcloud.business.TagHome;
 import fr.paris.lutece.plugins.tagcloud.business.portlet.TagCloudPortlet;
 import fr.paris.lutece.plugins.tagcloud.business.portlet.TagCloudPortletHome;
+import fr.paris.lutece.portal.business.portlet.Portlet;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
+import fr.paris.lutece.portal.service.message.AdminMessage;
+import fr.paris.lutece.portal.service.message.AdminMessageService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
+import fr.paris.lutece.portal.service.security.SecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.portal.web.constants.Messages;
 import fr.paris.lutece.portal.web.portlet.PortletJspBean;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.HashMap;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
  * This class provides the user interface to manage tagcloud Portlet features
  */
+@RequestScoped
+@Named
 public class TagCloudPortletJspBean extends PortletJspBean
 {
+    private static final long serialVersionUID = 1L;
+
+    private static final String ACTION_CREATE_PORTLET = "tagcloud.createPortlet";
+    private static final String ACTION_MODIFY_PORTLET = "tagcloud.modifyPortlet";
+    private static final String MESSAGE_INVALID_TOKEN = "tagcloud.message.invalidToken";
     ///////////////////////////////////////////////////////////////////////////////////
     // Constants
 
@@ -97,7 +112,15 @@ public class TagCloudPortletJspBean extends PortletJspBean
         // Use the id in the request to load the portlet
         String strPageId = request.getParameter( PARAMETER_PAGE_ID );
         String strPortletTypeId = request.getParameter( PARAMETER_PORTLET_TYPE_ID );
-        HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId );
+
+        if ( !isNumeric( strPageId ) || ( strPortletTypeId == null ) || strPortletTypeId.trim( ).isEmpty( ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        HashMap<String, Object> model = new HashMap<>( );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, ACTION_CREATE_PORTLET ) );
+        HtmlTemplate template = getCreateTemplate( strPageId, strPortletTypeId, model );
 
         //List of clouds present
         Plugin plugin = PluginService.getPlugin( PROPERTY_PLUGIN_NAME );
@@ -115,10 +138,16 @@ public class TagCloudPortletJspBean extends PortletJspBean
      */
     public String getModify( HttpServletRequest request )
     {
-        String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
-        int nPortletId = Integer.parseInt( strPortletId );
-        TagCloudPortlet portlet = (TagCloudPortlet) PortletHome.findByPrimaryKey( nPortletId );
-        HtmlTemplate template = getModifyTemplate( portlet );
+        TagCloudPortlet portlet = getPortlet( request.getParameter( PARAMETER_PORTLET_ID ) );
+
+        if ( portlet == null )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        HashMap<String, Object> model = new HashMap<>( );
+        model.put( SecurityTokenService.MARK_TOKEN, getSecurityTokenService( ).getToken( request, ACTION_MODIFY_PORTLET ) );
+        HtmlTemplate template = getModifyTemplate( portlet, model );
 
         // Get the plugin for the portlet
         Plugin plugin = PluginService.getPlugin( portlet.getPluginName(  ) );
@@ -138,13 +167,22 @@ public class TagCloudPortletJspBean extends PortletJspBean
      */
     public String doCreate( HttpServletRequest request )
     {
+        if ( !getSecurityTokenService( ).validate( request, ACTION_CREATE_PORTLET ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_INVALID_TOKEN, AdminMessage.TYPE_STOP );
+        }
+
         TagCloudPortlet portlet = new TagCloudPortlet(  );
 
         String strIdPage = request.getParameter( PARAMETER_PAGE_ID );
-        int nIdPage = Integer.parseInt( strIdPage );
+        String strCloudId = request.getParameter( PARAMETER_TAGCLOUD_ID );
 
-        //gets the identifier of the parent page
-        int nCloudId = Integer.parseInt( request.getParameter( PARAMETER_TAGCLOUD_ID ) );
+        if ( !isNumeric( strIdPage ) || !isNumeric( strCloudId ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
+
+        int nIdPage = Integer.parseInt( strIdPage );
 
         // get portlet common attributes
         String strErrorUrl = setPortletCommonData( request, portlet );
@@ -157,9 +195,9 @@ public class TagCloudPortletJspBean extends PortletJspBean
         portlet.setPageId( nIdPage );
 
         //gets the specific parameters
-        portlet.setIdCloud( nCloudId );
+        portlet.setIdCloud( Integer.parseInt( strCloudId ) );
 
-        //Portlet creation
+        //Portlet creation (the cloud association is stored by the DAO insert flow)
         TagCloudPortletHome.getInstance(  ).create( portlet );
 
         //Displays the page with the new Portlet
@@ -174,10 +212,19 @@ public class TagCloudPortletJspBean extends PortletJspBean
      */
     public String doModify( HttpServletRequest request )
     {
+        if ( !getSecurityTokenService( ).validate( request, ACTION_MODIFY_PORTLET ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_INVALID_TOKEN, AdminMessage.TYPE_STOP );
+        }
+
         // fetches portlet attributes
-        String strPortletId = request.getParameter( PARAMETER_PORTLET_ID );
-        int nPortletId = Integer.parseInt( strPortletId );
-        TagCloudPortlet portlet = (TagCloudPortlet) PortletHome.findByPrimaryKey( nPortletId );
+        TagCloudPortlet portlet = getPortlet( request.getParameter( PARAMETER_PORTLET_ID ) );
+        String strCloudId = request.getParameter( PARAMETER_TAGCLOUD_ID );
+
+        if ( ( portlet == null ) || !isNumeric( strCloudId ) )
+        {
+            return AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP );
+        }
 
         // retrieve portlet common attributes
         String strErrorUrl = setPortletCommonData( request, portlet );
@@ -188,17 +235,51 @@ public class TagCloudPortletJspBean extends PortletJspBean
         }
 
         // fetches portlet specific attributes
-        String strCloudId = request.getParameter( PARAMETER_TAGCLOUD_ID );
         portlet.setIdCloud( Integer.parseInt( strCloudId ) );
 
         // updates the portlet
         portlet.update(  );
 
-        int nCloudId = Integer.parseInt( request.getParameter( PARAMETER_TAGCLOUD_ID ) );
-        TagCloudPortletHome.storeCloud( nPortletId, nCloudId );
+        TagCloudPortletHome.storeCloud( portlet.getId( ), portlet.getIdCloud( ) );
 
         // displays the page with the updated portlet
         return getPageUrl( portlet.getPageId(  ) );
+    }
+
+    /**
+     * Loads a tag cloud portlet from a request parameter, guarding missing, malformed and unknown ids
+     *
+     * @param strPortletId the portlet id parameter value
+     * @return the portlet, or null when the parameter does not name an existing tagcloud portlet
+     */
+    private TagCloudPortlet getPortlet( String strPortletId )
+    {
+        if ( !isNumeric( strPortletId ) )
+        {
+            return null;
+        }
+
+        int nPortletId = Integer.parseInt( strPortletId );
+
+        if ( TagCloudPortletHome.getInstance( ).getDAO( ).load( nPortletId ) == null )
+        {
+            return null;
+        }
+
+        Portlet portlet = PortletHome.findByPrimaryKey( nPortletId );
+
+        return ( portlet instanceof TagCloudPortlet ) ? (TagCloudPortlet) portlet : null;
+    }
+
+    /**
+     * Tells whether a request parameter value is a plain positive integer.
+     *
+     * @param strValue the parameter value
+     * @return true when the value is made of digits only
+     */
+    private boolean isNumeric( String strValue )
+    {
+        return ( strValue != null ) && strValue.matches( "[0-9]+" );
     }
 
     /**

@@ -1,0 +1,16 @@
+<@cTpl>
+<@cSection type='div' class='portlet portlet-tagcloud' id='portlet_${portlet_id}'>
+<#if portlet_name??>
+	<@cTitle level=2 class='portlet-header'>${portlet_name}</@cTitle>
+</#if>
+	<@cBlock class='portlet-content'>
+	<#list tagclouds as cloud>
+		<@chList class='tagcloud' id='tagcloud_${portlet_id}_${cloud.id}'>
+		<#list cloud.tags as tag>
+			<@chItem><@cLink href=tag.tagUrl!'' label=tag.tagName!'' class='tag${tag.tagWeight!}' /></@chItem>
+		</#list>
+		</@chList>
+	</#list>
+	</@cBlock>
+</@cSection>
+</@cTpl>

@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset tagcloud:create_tagcloud_portlet.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Table structure for table tagcloud_portlet
 --

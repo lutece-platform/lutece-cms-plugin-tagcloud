@@ -39,11 +39,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 
 /**
  *
  * This class randomize the tags position
  */
+@ApplicationScoped
 public class RandomTagService implements ITransformationService
 {    
     public RandomTagService(  )

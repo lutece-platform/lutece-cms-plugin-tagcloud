@@ -36,7 +36,7 @@ package fr.paris.lutece.plugins.tagcloud.business.portlet;
 import fr.paris.lutece.portal.business.portlet.IPortletInterfaceDAO;
 import fr.paris.lutece.portal.business.portlet.PortletHome;
 import fr.paris.lutece.portal.business.portlet.PortletTypeHome;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 
@@ -47,8 +47,7 @@ import java.util.Collection;
 public class TagCloudPortletHome extends PortletHome
 {
     // Static variable pointed at the DAO instance
-    private static ITagCloudPortletDAO _dao = (ITagCloudPortletDAO) SpringContextService.getPluginBean( "tagcloud",
-            "tagCloudPortletDAO" );
+    private static ITagCloudPortletDAO _dao = CDI.current( ).select( ITagCloudPortletDAO.class ).get( );
 
     /** This class implements the Singleton design pattern. */
     private static TagCloudPortletHome _singleton = null;

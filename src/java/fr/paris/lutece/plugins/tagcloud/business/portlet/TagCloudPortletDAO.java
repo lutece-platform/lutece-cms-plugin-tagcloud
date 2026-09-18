@@ -39,10 +39,13 @@ import fr.paris.lutece.util.sql.DAOUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 
 /**
  * This class provides Data Access methods for TagCloudPortlet objects
  */
+@ApplicationScoped
 public final class TagCloudPortletDAO implements ITagCloudPortletDAO
 {
     // Constants
@@ -70,21 +73,22 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
      */
     public TagCloudPortlet load( int nId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT );
-        daoUtil.setInt( 1, nId );
-        daoUtil.executeQuery(  );
-
-        TagCloudPortlet tagCloudPortlet = null;
-
-        if ( daoUtil.next(  ) )
+         TagCloudPortlet tagCloudPortlet = null;
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT ) )
         {
-            tagCloudPortlet = new TagCloudPortlet(  );
+            daoUtil.setInt( 1, nId );
+            daoUtil.executeQuery(  );
 
-            tagCloudPortlet.setIdPortlet( daoUtil.getInt( 1 ) );
-            tagCloudPortlet.setIdCloud( daoUtil.getInt( 2 ) );
+
+            if ( daoUtil.next(  ) )
+            {
+                tagCloudPortlet = new TagCloudPortlet(  );
+
+                tagCloudPortlet.setIdPortlet( daoUtil.getInt( 1 ) );
+                tagCloudPortlet.setIdCloud( daoUtil.getInt( 2 ) );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tagCloudPortlet;
     }
@@ -96,10 +100,11 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
      */
     public void delete( int nTagCloudPortletId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE );
-        daoUtil.setInt( 1, nTagCloudPortletId );
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE ) )
+        {
+            daoUtil.setInt( 1, nTagCloudPortletId );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -118,20 +123,21 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
     public Collection<TagCloudPortlet> selectTagCloudPortletsList(  )
     {
         Collection<TagCloudPortlet> tagCloudPortletList = new ArrayList<TagCloudPortlet>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL ) )
         {
-            TagCloudPortlet tagCloudPortlet = new TagCloudPortlet(  );
+            daoUtil.executeQuery(  );
 
-            tagCloudPortlet.setIdPortlet( daoUtil.getInt( 1 ) );
-            tagCloudPortlet.setIdCloud( daoUtil.getInt( 2 ) );
+            while ( daoUtil.next(  ) )
+            {
+                TagCloudPortlet tagCloudPortlet = new TagCloudPortlet(  );
 
-            tagCloudPortletList.add( tagCloudPortlet );
+                tagCloudPortlet.setIdPortlet( daoUtil.getInt( 1 ) );
+                tagCloudPortlet.setIdCloud( daoUtil.getInt( 2 ) );
+
+                tagCloudPortletList.add( tagCloudPortlet );
+            }
+
         }
-
-        daoUtil.free(  );
 
         return tagCloudPortletList;
     }
@@ -143,17 +149,18 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
      */
     public Collection<Integer> selectTagCloudByPortlet( int nPortletId )
     {
-        Collection<Integer> tagCloudPortletList = new ArrayList<Integer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TAGCLOUD_BY_PORTLET );
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+         Collection<Integer> tagCloudPortletList = new ArrayList<Integer>(  );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_TAGCLOUD_BY_PORTLET ) )
         {
-            tagCloudPortletList.add( daoUtil.getInt( 1 ) );
-        }
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+            while ( daoUtil.next(  ) )
+            {
+                tagCloudPortletList.add( daoUtil.getInt( 1 ) );
+            }
+
+        }
 
         return tagCloudPortletList;
     }
@@ -165,13 +172,14 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
      */
     public void insertCloud( int nPortletId, int nCloudId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT ) )
+        {
 
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nCloudId );
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nCloudId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -181,14 +189,15 @@ public final class TagCloudPortletDAO implements ITagCloudPortletDAO
     */
     public void storeCloud( int nPortletId, int nCloudId )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE );
+         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE ) )
+        {
 
-        daoUtil.setInt( 1, nPortletId );
-        daoUtil.setInt( 2, nCloudId );
-        daoUtil.setInt( 3, nPortletId );
+            daoUtil.setInt( 1, nPortletId );
+            daoUtil.setInt( 2, nCloudId );
+            daoUtil.setInt( 3, nPortletId );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**

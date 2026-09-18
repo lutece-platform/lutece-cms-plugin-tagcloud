@@ -1,18 +1,18 @@
-<@row>
-	<@columns>
-		<@box>
-			<@boxHeader title='#i18n{tagcloud.create_tagcloud.pageTitle}' skipHeader=true/>
-			<@boxBody>
-				<@tform method='post' name='create_calendar' action='jsp/admin/plugins/tagcloud/DoCreateTagCloud.jsp'>
-					<@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.create_tagcloud.name}' mandatory=true>
-						<@input type='text' id='tagcloud_name' name='tagcloud_name' maxlength=50 />
-					</@formGroup>
-					<@formGroup>			
-						<@button type='submit' title='#i18n{tagcloud.create_tagcloud.buttonLabelCreate}' buttonIcon='save' />
-						<@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?plugin_name=tagcloud' title='#i18n{portal.admin.message.buttonCancel}' buttonIcon='times' color='default' />
-					</@formGroup>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{tagcloud.create_tagcloud.pageTitle}'>
+            <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=manageTagClouds' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' />
+        </@pageHeader>
+        <@messages errors=errors![] />
+        <@tform method='post' name='create_tagcloud' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp' boxed=true>
+            <@input type='hidden' name='action' value='createTagCloud' />
+            <@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.create_tagcloud.name}' mandatory=true rows=2>
+                <@input type='text' name='tagcloud_name' id='tagcloud_name' value='' mandatory=true />
+            </@formGroup>
+            <@formGroup rows=2>
+                <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.create_tagcloud.buttonLabelCreate}' color='primary' />
+                <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=manageTagClouds' buttonIcon='x' title='#i18n{portal.admin.message.buttonCancel}' />
+            </@formGroup>
+        </@tform>
+    </@pageColumn>
+</@pageContainer>

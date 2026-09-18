@@ -31,41 +31,35 @@
  *
  * License 1.0
  */
-package fr.paris.lutece.plugins.tagcloud.service;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
+package fr.paris.lutece.plugins.tagcloud.web;
 
 import org.junit.jupiter.api.Test;
 
-import fr.paris.lutece.plugins.tagcloud.business.Tag;
+import fr.paris.lutece.portal.business.user.AdminUser;
+import fr.paris.lutece.test.AdminUserUtils;
+import fr.paris.lutece.test.LuteceTestCase;
+import fr.paris.lutece.test.mocks.MockHttpServletRequest;
+import fr.paris.lutece.test.mocks.MockHttpServletResponse;
+import jakarta.inject.Inject;
 
-public class RandomTagServiceTest
+/**
+ * TagCloudJspBean Test
+ */
+public class TagCloudJspBeanTest extends LuteceTestCase
 {
+    @Inject
+    private TagCloudJspBean _bean;
+
     @Test
-    public void testTransform( )
+    public void testGetManageTagClouds( ) throws Exception
     {
-        ArrayList<Tag> testTags = new ArrayList<>( );
+        MockHttpServletRequest request = new MockHttpServletRequest( );
+        request.addParameter( "view", "manageTagClouds" );
+        AdminUserUtils.registerAdminUserWithRight( request, new AdminUser( ), TagCloudJspBean.RIGHT_MANAGE_TAGCLOUD );
 
-        Tag tag1 = new Tag( );
-        tag1.setIdTag( 1 );
-        tag1.setIdTagCloud( 1 );
-        tag1.setTagName( "tag 1" );
+        String strHtml = _bean.processController( request, new MockHttpServletResponse( ) );
 
-        Tag tag2 = new Tag( );
-        tag2.setIdTag( 2 );
-        tag2.setIdTagCloud( 2 );
-        tag2.setTagName( "tag 2" );
-
-        testTags.add( tag1 );
-        testTags.add( tag2 );
-
-        ArrayList<Tag> result = new RandomTagService( ).transform( testTags );
-
-        assertEquals( 2, result.size( ) );
-        assertTrue( result.contains( tag1 ) );
-        assertTrue( result.contains( tag2 ) );
+        assertNotNull( strHtml );
+        assertTrue( strHtml.contains( "Open Source Tools" ), "The manage page should list the seeded clouds" );
     }
 }

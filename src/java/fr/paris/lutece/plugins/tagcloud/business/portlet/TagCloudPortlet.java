@@ -36,29 +36,34 @@ package fr.paris.lutece.plugins.tagcloud.business.portlet;
 import fr.paris.lutece.plugins.tagcloud.business.Tag;
 import fr.paris.lutece.plugins.tagcloud.business.TagHome;
 import fr.paris.lutece.plugins.tagcloud.service.RandomTagService;
-import fr.paris.lutece.portal.business.portlet.Portlet;
+import fr.paris.lutece.portal.business.portlet.PortletHtmlContent;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.util.xml.XmlUtil;
+import fr.paris.lutece.portal.service.template.AppTemplateService;
+import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
  * This class represents business objects TagCloudPortlet
  */
-public class TagCloudPortlet extends Portlet
+public class TagCloudPortlet extends PortletHtmlContent
 {
-    /////////////////////////////////////////////////////////////////////////////////
-    // Constants
-    private static final String TAG_WEIGHT = "tag-weight";
-    private static final String TAG_NAME = "tag-name";
-    private static final String TAG_URL = "tag-url";
-    private static final String TAG_PORTLET_TAGCLOUD = "cloud";
-    private static final String TAG = "tag";
+    private static final String TEMPLATE_PORTLET_TAGCLOUD = "skin/plugins/tagcloud/portlet/tagcloud_portlet.html";
+    private static final String MARK_TAGCLOUDS = "tagclouds";
+    private static final String MARK_PORTLET_NAME = "portlet_name";
+    private static final String MARK_PORTLET_ID = "portlet_id";
+    private static final String MARK_TAGS = "tags";
+    private static final String MARK_ID = "id";
+    private static final String PLUGIN_NAME = "tagcloud";
 
     // Variables declarations
     private int _nIdPortlet;
@@ -73,64 +78,46 @@ public class TagCloudPortlet extends Portlet
     }
 
     /**
-     * Returns the Xml code of the TagCloud portlet with XML heading
+     * Returns the HTML content of the TagCloud portlet
      *
      * @param request The HTTP servlet request
-     * @return the Xml code of the TagCloud portlet
+     * @return the HTML code of the TagCloud portlet content
      */
-    public String getXmlDocument( HttpServletRequest request )
+    @Override
+    public String getHtmlContent( HttpServletRequest request )
     {
-        return XmlUtil.getXmlHeader(  ) + getXml( request );
-    }
+        Plugin plugin = PluginService.getPlugin( PLUGIN_NAME );
+        List<Map<String, Object>> listClouds = new ArrayList<>( );
 
-    /**
-     * Returns the Xml code of the TagCloud portlet without XML heading
-     *
-     * @param request The HTTP servlet request
-     * @return the Xml code of the TagCloud portlet content
-     */
-    public String getXml( HttpServletRequest request )
-    {
-        StringBuffer strXml = new StringBuffer(  );
-        Plugin plugin = PluginService.getPlugin( "tagcloud" );
+        Collection<Integer> listCloudIds = TagCloudPortletHome.findTagCloudsInPortlet( this.getId( ) );
 
-        //Fetch the cloud id from the portlet
-        Collection<Integer> listClouds = TagCloudPortletHome.findTagCloudsInPortlet( this.getId(  ) );
-        XmlUtil.beginElement( strXml, TAG_PORTLET_TAGCLOUD );
-
-        for ( Integer tagCloudId : listClouds )
+        for ( Integer nCloudId : listCloudIds )
         {
-            ArrayList<Tag> listTags = TagHome.findTagsByCloud( tagCloudId.intValue(  ), plugin );
-            RandomTagService service = new RandomTagService(  );
+            ArrayList<Tag> listTags = TagHome.findTagsByCloud( nCloudId.intValue( ), plugin );
 
-            //If no tag is present in a tag 
-            if ( ( listTags != null ) && !listTags.isEmpty(  ) )
+            if ( ( listTags != null ) && !listTags.isEmpty( ) )
             {
-                listTags = service.transform( listTags );
+                listTags = new RandomTagService( ).transform( listTags );
+            }
 
-                for ( Tag tag : listTags )
-                {
-                    XmlUtil.beginElement( strXml, TAG );
-                    XmlUtil.addElement( strXml, TAG_NAME, tag.getTagName(  ) );
-                    XmlUtil.addElement( strXml, TAG_URL, tag.getTagUrl(  ) );
-                    XmlUtil.addElement( strXml, TAG_WEIGHT, tag.getTagWeight(  ) );
-                    XmlUtil.endElement( strXml, TAG );
-                }
-            }
-            else
-            {
-                XmlUtil.beginElement( strXml, TAG );
-                XmlUtil.addElement( strXml, TAG_NAME, "" );
-                XmlUtil.addElement( strXml, TAG_URL, "" );
-                XmlUtil.addElement( strXml, TAG_WEIGHT, "" );
-                XmlUtil.endElement( strXml, TAG );
-            }
+            Map<String, Object> cloudModel = new HashMap<>( );
+            cloudModel.put( MARK_ID, nCloudId );
+            cloudModel.put( MARK_TAGS, ( listTags != null ) ? listTags : Collections.emptyList( ) );
+            listClouds.add( cloudModel );
         }
 
-        XmlUtil.endElement( strXml, TAG_PORTLET_TAGCLOUD );
+        Map<String, Object> model = new HashMap<>( );
+        model.put( MARK_TAGCLOUDS, listClouds );
+        model.put( MARK_PORTLET_ID, getId( ) );
 
-        /**/
-        return addPortletTags( strXml );
+        if ( getDisplayPortletTitle( ) == 0 )
+        {
+            model.put( MARK_PORTLET_NAME, getName( ) );
+        }
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_PORTLET_TAGCLOUD, getLocale( request ), model );
+
+        return template.getHtml( );
     }
 
     /**
