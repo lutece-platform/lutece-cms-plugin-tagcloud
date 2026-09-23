@@ -28,11 +28,13 @@
     <admin-features>
         <admin-feature>
             <feature-id>TAGCLOUD_MANAGEMENT</feature-id>
+            <feature-group>CONTENT</feature-group>
             <feature-title>tagcloud.adminFeature.tagcloud_management.name</feature-title>
             <feature-description>tagcloud.adminFeature.tagcloud_management.description</feature-description>
             <feature-level>3</feature-level>
             <feature-url>jsp/admin/plugins/tagcloud/ManageTagClouds.jsp</feature-url>
-            <feature-icon-url>images/admin/skin/plugins/tagcloud/tagcloud_feature.png</feature-icon-url>
+            <feature-icon-url>ti ti-tags</feature-icon-url>
+            <icon-url>ti ti-tags</icon-url>
         </admin-feature>
     </admin-features>
     <!-- Portlet parameters -->

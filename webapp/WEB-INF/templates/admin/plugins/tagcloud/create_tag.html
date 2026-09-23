@@ -1,7 +1,7 @@
 <@pageContainer>
     <@pageColumn>
         <@pageHeader title='#i18n{tagcloud.create_tag.pageTitle}'>
-            <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagcloud_id}' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' />
+            <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&amp;tagcloud_id=${tagcloud_id}' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' color='light' />
         </@pageHeader>
         <@messages errors=errors![] />
         <@tform method='post' name='create_tag' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp' boxed=true>
@@ -18,7 +18,7 @@
             </@formGroup>
             <@formGroup rows=2>
                 <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.create_tag.buttonLabelValidate}' color='primary' />
-                <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagcloud_id}' buttonIcon='x' title='#i18n{tagcloud.create_tag.backToTagCloudList}' />
+                <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&amp;tagcloud_id=${tagcloud_id}' buttonIcon='x' title='#i18n{portal.util.labelCancel}' color='light' />
             </@formGroup>
         </@tform>
     </@pageColumn>

@@ -290,7 +290,7 @@ public class TagCloudPortletJspBean extends PortletJspBean
      */
     public String getCloudsCombo( ReferenceList listClouds, String strDefaultCloudId )
     {
-        HashMap model = new HashMap(  );
+        Map<String, Object> model = new HashMap<>( );
         model.put( MARK_TAGCLOUD_LIST, listClouds );
         model.put( MARK_TAGCLOUD_ID, strDefaultCloudId );
 
