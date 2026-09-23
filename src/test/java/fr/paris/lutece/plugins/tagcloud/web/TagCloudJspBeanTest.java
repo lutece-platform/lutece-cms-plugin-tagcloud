@@ -50,6 +50,11 @@ public class TagCloudJspBeanTest extends LuteceTestCase
     @Inject
     private TagCloudJspBean _bean;
 
+    /**
+     * The manage view lists the seeded clouds
+     *
+     * @throws Exception if the test fails
+     */
     @Test
     public void testGetManageTagClouds( ) throws Exception
     {

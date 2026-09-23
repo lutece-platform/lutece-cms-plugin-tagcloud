@@ -5,21 +5,17 @@
         </@pageHeader>
         <@messages infos=infos![] errors=errors![] warnings=warnings![] />
         <#if tagcloud_list?has_content>
-            <@table>
-                <tr>
-                    <th>#i18n{tagcloud.manage_tagcloud.columnTitleDescription}</th>
-                    <th>#i18n{tagcloud.manage_tagcloud.columnTitleActions}</th>
-                </tr>
+            <@manageFeature>
                 <#list tagcloud_list as tagcloud>
-                <tr>
-                    <td>${tagcloud.tagCloudDescription!}</td>
-                    <td>
-                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='edit' title='#i18n{portal.util.labelModify}' />
-                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTagCloud&tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' />
-                    </td>
-                </tr>
+                <@manageFeatureItem>
+                    <@manageFeatureItemColumn auto=true flex=false>${tagcloud.tagCloudDescription!}</@manageFeatureItemColumn>
+                    <@manageFeatureItemColumn align='end'>
+                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&amp;tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='edit' title='#i18n{portal.util.labelModify}' />
+                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTagCloud&amp;tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' />
+                    </@manageFeatureItemColumn>
+                </@manageFeatureItem>
                 </#list>
-            </@table>
+            </@manageFeature>
             <@paginationAdmin paginator=paginator combo=1 />
         <#else>
             <@empty title='#i18n{portal.util.labelNoItem}' />

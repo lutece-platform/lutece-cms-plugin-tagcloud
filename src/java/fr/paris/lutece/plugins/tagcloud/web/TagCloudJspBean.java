@@ -38,9 +38,7 @@ import fr.paris.lutece.plugins.tagcloud.business.TagCloud;
 import fr.paris.lutece.plugins.tagcloud.business.TagHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
-import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
 import fr.paris.lutece.portal.util.mvc.commons.annotations.Action;
@@ -76,6 +74,8 @@ public class TagCloudJspBean extends MVCAdminJspBean
     private static final long serialVersionUID = 1L;
 
     private static final String PLUGIN_NAME = "tagcloud";
+    private static final int WEIGHT_MIN = 1;
+    private static final int WEIGHT_MAX = 10;
 
     // templates
     private static final String TEMPLATE_MANAGE_TAGCLOUD = "/admin/plugins/tagcloud/manage_tagcloud.html";
@@ -392,7 +392,8 @@ public class TagCloudJspBean extends MVCAdminJspBean
         String strTagWeight = request.getParameter( PARAMETER_TAG_WEIGHT );
 
         // Mandatory field
-        if ( ( nCloudId == null ) || ( strTagName == null ) || strTagName.trim( ).isEmpty( ) )
+        if ( ( nCloudId == null ) || ( TagHome.findCloudById( nCloudId.intValue( ), getPlugin( ) ) == null ) || ( strTagName == null )
+                || strTagName.trim( ).isEmpty( ) || !isWeight( strTagWeight ) )
         {
             return redirect( request, AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP ) );
         }
@@ -400,7 +401,7 @@ public class TagCloudJspBean extends MVCAdminJspBean
         Tag tag = new Tag(  );
         tag.setIdTagCloud( nCloudId.intValue( ) );
         tag.setTagName( strTagName );
-        tag.setTagUrl( ( strTagUrl != null ) ? strTagUrl.replaceAll( "&", "&amp;" ) : null );
+        tag.setTagUrl( ( strTagUrl != null ) ? strTagUrl.replaceAll( "&", "&amp;" ) : "" );
         tag.setTagWeight( strTagWeight );
         TagHome.create( tag, getPlugin( ) );
 
@@ -418,17 +419,17 @@ public class TagCloudJspBean extends MVCAdminJspBean
     {
         Tag tag = findTag( request.getParameter( PARAMETER_TAG_CLOUD_ID ), request.getParameter( PARAMETER_TAG_ID ) );
         String strTagName = request.getParameter( PARAMETER_TAG_NAME );
+        String strTagUrl = request.getParameter( PARAMETER_TAG_URL );
+        String strTagWeight = request.getParameter( PARAMETER_TAG_WEIGHT );
 
         // Mandatory field
-        if ( ( tag == null ) || ( strTagName == null ) || strTagName.trim( ).isEmpty( ) )
+        if ( ( tag == null ) || ( strTagName == null ) || strTagName.trim( ).isEmpty( ) || !isWeight( strTagWeight ) )
         {
             return redirect( request, AdminMessageService.getMessageUrl( request, Messages.MANDATORY_FIELDS, AdminMessage.TYPE_STOP ) );
         }
 
-        String strTagUrl = request.getParameter( PARAMETER_TAG_URL );
-        String strTagWeight = request.getParameter( PARAMETER_TAG_WEIGHT );
         tag.setTagName( strTagName );
-        tag.setTagUrl( ( strTagUrl != null ) ? strTagUrl.replaceAll( "&", "&amp;" ) : null );
+        tag.setTagUrl( ( strTagUrl != null ) ? strTagUrl.replaceAll( "&", "&amp;" ) : "" );
         tag.setTagWeight( strTagWeight );
         TagHome.update( tag, getPlugin( ) );
 
@@ -469,7 +470,7 @@ public class TagCloudJspBean extends MVCAdminJspBean
     {
         ReferenceList listWeight = new ReferenceList(  );
 
-        for ( int i = 1; i < 11; i++ )
+        for ( int i = WEIGHT_MIN; i <= WEIGHT_MAX; i++ )
         {
             listWeight.addItem( "" + i, "" + i );
         }
@@ -515,6 +516,25 @@ public class TagCloudJspBean extends MVCAdminJspBean
         return TagHome.findByPrimaryKey( nCloudId.intValue( ), nTagId.intValue( ), getPlugin( ) );
     }
 
+    /**
+     * Tells whether a weight parameter value is one of the weights offered by the forms
+     *
+     * @param strWeight the parameter value
+     * @return true when the value is an integer from 1 to 10
+     */
+    private boolean isWeight( String strWeight )
+    {
+        Integer nWeight = parseId( strWeight );
+
+        return ( nWeight != null ) && ( nWeight.intValue( ) >= WEIGHT_MIN ) && ( nWeight.intValue( ) <= WEIGHT_MAX );
+    }
+
+    /**
+     * Parses a positive integer id
+     *
+     * @param strValue the parameter value
+     * @return the id, or null when the value is missing or not a positive integer
+     */
     private Integer parseId( String strValue )
     {
         if ( ( strValue == null ) || !strValue.matches( "[0-9]+" ) )
