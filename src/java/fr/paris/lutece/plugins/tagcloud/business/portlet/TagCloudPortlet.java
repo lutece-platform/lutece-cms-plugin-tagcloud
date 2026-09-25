@@ -39,8 +39,6 @@ import fr.paris.lutece.plugins.tagcloud.service.RandomTagService;
 import fr.paris.lutece.portal.business.portlet.PortletHtmlContent;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.plugin.PluginService;
-import fr.paris.lutece.portal.service.template.AppTemplateService;
-import fr.paris.lutece.util.html.HtmlTemplate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,10 +55,8 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class TagCloudPortlet extends PortletHtmlContent
 {
-    private static final String TEMPLATE_PORTLET_TAGCLOUD = "skin/plugins/tagcloud/portlet/tagcloud_portlet.html";
+    private static final String TEMPLATE_PORTLET_DEFAULT = "skin/plugins/tagcloud/portlet/tagcloud_portlet.html";
     private static final String MARK_TAGCLOUDS = "tagclouds";
-    private static final String MARK_PORTLET_NAME = "portlet_name";
-    private static final String MARK_PORTLET_ID = "portlet_id";
     private static final String MARK_TAGS = "tags";
     private static final String MARK_ID = "id";
     private static final String PLUGIN_NAME = "tagcloud";
@@ -78,7 +74,8 @@ public class TagCloudPortlet extends PortletHtmlContent
     }
 
     /**
-     * Returns the HTML content of the TagCloud portlet
+     * Returns the HTML content of the TagCloud portlet, rendered with the template chosen for the portlet among the ones
+     * registered in the core for its type, or with the default template
      *
      * @param request The HTTP servlet request
      * @return the HTML code of the TagCloud portlet content
@@ -106,18 +103,10 @@ public class TagCloudPortlet extends PortletHtmlContent
             listClouds.add( cloudModel );
         }
 
-        Map<String, Object> model = new HashMap<>( );
+        Map<String, Object> model = createPortletModel( );
         model.put( MARK_TAGCLOUDS, listClouds );
-        model.put( MARK_PORTLET_ID, getId( ) );
 
-        if ( getDisplayPortletTitle( ) == 0 )
-        {
-            model.put( MARK_PORTLET_NAME, getName( ) );
-        }
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_PORTLET_TAGCLOUD, getLocale( request ), model );
-
-        return template.getHtml( );
+        return renderTemplate( request, TEMPLATE_PORTLET_DEFAULT, model );
     }
 
     /**

@@ -1,18 +1,20 @@
 <@cTpl>
-<#assign portletClass = ('portlet portlet-tagcloud ' + device_class!)?trim>
+<#assign portletClass = ('portlet portlet-tagcloud portlet-tagcloud-sidebar card ' + device_class!)?trim>
 <#assign portletSectionId = 'portlet_' + portlet_id?c>
 <@cSection class=portletClass id=portletSectionId>
 	<#if portlet_name??>
-		<@cTitle level=2 class='portlet-header'>${portlet_name}</@cTitle>
+		<@cBlock class='card-header'>
+			<@cTitle level=2 class='card-title h4 mb-0'>${portlet_name}</@cTitle>
+		</@cBlock>
 	</#if>
-	<@cBlock class='portlet-content'>
+	<@cBlock class='card-body'>
 		<#list tagclouds as cloud>
 			<#if cloud.tags?has_content>
 				<#assign cloudListId = 'tagcloud_' + portlet_id?c + '_' + cloud.id?c>
-				<@chList class='tagcloud' id=cloudListId>
+				<@chList class='tagcloud list-inline mb-0' id=cloudListId>
 					<#list cloud.tags as tag>
 						<#assign tagClass = 'tag' + (tag.tagWeight!'')>
-						<@chItem><@cLink href=tag.tagUrl!'' label=tag.tagName!'' class=tagClass /></@chItem>
+						<@chItem class='list-inline-item'><@cLink href=tag.tagUrl!'' label=tag.tagName!'' class=tagClass /></@chItem>
 					</#list>
 				</@chList>
 			</#if>

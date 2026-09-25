@@ -11,7 +11,7 @@
     <user-guide/>
     <provider>tagcloud.plugin.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url>images/admin/skin/plugins/tagcloud/tagcloud.png</icon-url>
+    <icon-url>themes/shared/plugins/tagcloud/images/admin/tagcloud.svg</icon-url>
     <copyright>Copyright 2001-2012 Mairie de Paris</copyright>
     <core-version-dependency>
         <min-core-version>8.0.0</min-core-version>
@@ -22,7 +22,7 @@
     <!-- Specific plugin CSS stylesheets -->
     <css-stylesheets>
         <css-stylesheets-scope>portal</css-stylesheets-scope>
-        <css-stylesheet>tagcloud/tagcloud.css</css-stylesheet>
+        <css-stylesheet>../../themes/shared/plugins/tagcloud/css/tagcloud.css</css-stylesheet>
     </css-stylesheets>
 
     <admin-features>
