@@ -1,0 +1,25 @@
+<#-- Tag creation or modification form, shown in a modal.
+     The core injects the page's own token right after each <form> tag. The tag actions need their own: this field
+     sits before the form it belongs to, so it is submitted first and is the one the filter reads. -->
+<#macro tagForm formName action token cloudId tag={}>
+    <input type="hidden" name="_csrftoken" value="${token}" form="${formName}">
+    <@tform method='post' id=formName name=formName action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp'>
+        <@input type='hidden' name='action' value=action />
+        <@input type='hidden' name='tagcloud_id' value='${cloudId?c}' />
+        <#if tag.idTag??><@input type='hidden' name='tag_id' value='${tag.idTag}' /></#if>
+        <#local idSuffix = '_' + formName />
+        <@formGroup labelFor='tag_name${idSuffix}' labelKey='#i18n{tagcloud.create_tag.labelTagName}' mandatory=true rows=2>
+            <@input type='text' name='tag_name' id='tag_name${idSuffix}' value='${tag.tagName!}' maxlength=100 mandatory=true />
+        </@formGroup>
+        <@formGroup labelFor='tag_weight${idSuffix}' labelKey='#i18n{tagcloud.create_tag.labelTagWeight}' rows=2>
+            <@select name='tag_weight' id='tag_weight${idSuffix}' default_value='${tag.tagWeight!}' items=list_weight />
+        </@formGroup>
+        <@formGroup labelFor='tag_url${idSuffix}' labelKey='#i18n{tagcloud.create_tag.labelTagUrl}' rows=2>
+            <@input type='text' name='tag_url' id='tag_url${idSuffix}' value='${tag.tagUrl!}' maxlength=100 />
+        </@formGroup>
+        <@formGroup rows=2>
+            <@button type='submit' buttonIcon='check' title=(tag.idTag??)?then('#i18n{tagcloud.modify_tag.buttonLabelValidate}','#i18n{tagcloud.create_tag.buttonLabelValidate}') color='primary' />
+            <@button type='button' buttonIcon='x' title='#i18n{portal.util.labelCancel}' color='light' params='data-bs-dismiss="modal"' />
+        </@formGroup>
+    </@tform>
+</#macro>

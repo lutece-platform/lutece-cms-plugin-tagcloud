@@ -38,6 +38,7 @@ import fr.paris.lutece.plugins.tagcloud.business.TagCloud;
 import fr.paris.lutece.plugins.tagcloud.business.TagHome;
 import fr.paris.lutece.portal.service.message.AdminMessage;
 import fr.paris.lutece.portal.service.message.AdminMessageService;
+import fr.paris.lutece.portal.service.security.ISecurityTokenService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.util.mvc.admin.MVCAdminJspBean;
 import fr.paris.lutece.portal.util.mvc.admin.annotations.Controller;
@@ -53,6 +54,8 @@ import fr.paris.lutece.util.url.UrlItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -80,23 +83,14 @@ public class TagCloudJspBean extends MVCAdminJspBean
     // templates
     private static final String TEMPLATE_MANAGE_TAGCLOUD = "/admin/plugins/tagcloud/manage_tagcloud.html";
     private static final String TEMPLATE_MODIFY_TAGCLOUD = "/admin/plugins/tagcloud/modify_tagcloud.html";
-    private static final String TEMPLATE_CREATE_TAGCLOUD = "/admin/plugins/tagcloud/create_tagcloud.html";
-    private static final String TEMPLATE_CREATE_TAG = "/admin/plugins/tagcloud/create_tag.html";
-    private static final String TEMPLATE_MODIFY_TAG = "/admin/plugins/tagcloud/modify_tag.html";
 
     // properties for page titles
     private static final String PROPERTY_PAGE_TITLE_MANAGE_TAGCLOUD = "tagcloud.manage_tagcloud.page_title";
     private static final String PROPERTY_PAGE_TITLE_MODIFY_TAGCLOUD = "tagcloud.modify_tagcloud.pageTitle";
-    private static final String PROPERTY_PAGE_TITLE_CREATE_TAGCLOUD = "tagcloud.create_tagcloud.pageTitle";
-    private static final String PROPERTY_PAGE_TITLE_CREATE_TAG = "tagcloud.create_tag.pageTitle";
-    private static final String PROPERTY_PAGE_TITLE_MODIFY_TAG = "tagcloud.modify_tag.pageTitle";
 
     // Views
     private static final String VIEW_MANAGE_TAGCLOUDS = "manageTagClouds";
-    private static final String VIEW_CREATE_TAGCLOUD = "createTagCloud";
     private static final String VIEW_MODIFY_TAGCLOUD = "modifyTagCloud";
-    private static final String VIEW_CREATE_TAG = "createTag";
-    private static final String VIEW_MODIFY_TAG = "modifyTag";
     private static final String VIEW_CONFIRM_REMOVE_TAGCLOUD = "confirmRemoveTagCloud";
     private static final String VIEW_CONFIRM_REMOVE_TAG = "confirmRemoveTag";
 
@@ -110,11 +104,12 @@ public class TagCloudJspBean extends MVCAdminJspBean
 
     // Markers
     private static final String MARK_TAG_CLOUD_LIST = "tagcloud_list";
-    private static final String MARK_TAGCLOUD_ID = "tagcloud_id";
     private static final String MARK_TAGCLOUD = "tagcloud";
     private static final String MARK_LIST_WEIGHT = "list_weight";
     private static final String MARK_TAG_LIST = "tag_list";
-    private static final String MARK_TAG = "tagObject";
+    private static final String MARK_TAGS_BY_CLOUD = "tags_by_cloud";
+    private static final String MARK_TOKEN_CREATE_TAG = "token_create_tag";
+    private static final String MARK_TOKEN_MODIFY_TAG = "token_modify_tag";
     private static final String PARAMETER_TAG_CLOUD_NAME = "tagcloud_name";
     private static final String PARAMETER_TAG_CLOUD_ID = "tagcloud_id";
     private static final String PARAMETER_TAG_NAME = "tag_name";
@@ -140,6 +135,9 @@ public class TagCloudJspBean extends MVCAdminJspBean
     @Pager( name = PAGER_TAGS, listBookmark = MARK_TAG_LIST )
     private IPager<Tag, Tag> _tagPager;
 
+    @Inject
+    private ISecurityTokenService _securityTokenService;
+
     /**
      * Returns the list of tagclouds
      *
@@ -153,6 +151,15 @@ public class TagCloudJspBean extends MVCAdminJspBean
         setPageTitleProperty( PROPERTY_PAGE_TITLE_MANAGE_TAGCLOUD );
 
         _cloudPager.withListItem( new ArrayList<>( TagHome.getTagClouds( getPlugin( ) ) ) ).populateModels( request, model, getLocale( ) );
+        // Keyed by the cloud id as a string: FreeMarker only looks up hash keys by string
+        Map<String, List<Tag>> mapTagsByCloud = TagHome.getTagList( getPlugin( ) ).stream( )
+                .collect( Collectors.groupingBy( tag -> String.valueOf( tag.getIdTagCloud( ) ) ) );
+        model.put( MARK_TAGS_BY_CLOUD, mapTagsByCloud );
+        model.put( MARK_LIST_WEIGHT, getListWeight( ) );
+        // The creation forms sit in modals of this page, and the default view receives no token of its own. The tag
+        // modals carry theirs; the one the core injects into every form is the last generated, the cloud creation one
+        model.put( MARK_TOKEN_CREATE_TAG, _securityTokenService.getToken( request, ACTION_CREATE_TAG ) );
+        _securityTokenService.getToken( request, ACTION_CREATE_TAGCLOUD );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MANAGE_TAGCLOUD, getLocale( ), model );
 
@@ -182,25 +189,14 @@ public class TagCloudJspBean extends MVCAdminJspBean
                 request, model, getLocale( ) );
 
         model.put( MARK_TAGCLOUD, tagCloud );
+        model.put( MARK_LIST_WEIGHT, getListWeight( ) );
+        // The tag modals post their own actions: each needs its token. The one the core injects into every form is the
+        // last one generated, so the page's own action comes last
+        model.put( MARK_TOKEN_CREATE_TAG, _securityTokenService.getToken( request, ACTION_CREATE_TAG ) );
+        model.put( MARK_TOKEN_MODIFY_TAG, _securityTokenService.getToken( request, ACTION_MODIFY_TAG ) );
+        _securityTokenService.getToken( request, ACTION_MODIFY_TAGCLOUD );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_TAGCLOUD, getLocale( ), model );
-
-        return getAdminPage( template.getHtml( ) );
-    }
-
-    /**
-     * Returns the tagcloud creation form
-     *
-     * @param request The Http request
-     * @param model The model
-     * @return Html creation form
-     */
-    @View( value = VIEW_CREATE_TAGCLOUD )
-    public String getCreateTagCloud( HttpServletRequest request, Models model )
-    {
-        setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_TAGCLOUD );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_TAGCLOUD, getLocale( ), model );
 
         return getAdminPage( template.getHtml( ) );
     }
@@ -351,33 +347,6 @@ public class TagCloudJspBean extends MVCAdminJspBean
     }
 
     /**
-     * Returns the Tag creation form
-     *
-     * @param request The Http request
-     * @param model The model
-     * @return Html creation form
-     */
-    @View( value = VIEW_CREATE_TAG )
-    public String getCreateTag( HttpServletRequest request, Models model )
-    {
-        setPageTitleProperty( PROPERTY_PAGE_TITLE_CREATE_TAG );
-
-        Integer nCloudId = parseId( request.getParameter( PARAMETER_TAG_CLOUD_ID ) );
-
-        if ( ( nCloudId == null ) || ( TagHome.findCloudById( nCloudId.intValue( ), getPlugin( ) ) == null ) )
-        {
-            return redirect( request, AdminMessageService.getMessageUrl( request, MESSAGE_OBJECT_NOT_FOUND, AdminMessage.TYPE_STOP ) );
-        }
-
-        model.put( MARK_TAGCLOUD_ID, nCloudId );
-        model.put( MARK_LIST_WEIGHT, getListWeight( ) );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CREATE_TAG, getLocale( ), model );
-
-        return getAdminPage( template.getHtml( ) );
-    }
-
-    /**
      * Process Tag creation
      *
      * @param request The Http request
@@ -434,32 +403,6 @@ public class TagCloudJspBean extends MVCAdminJspBean
         TagHome.update( tag, getPlugin( ) );
 
         return redirect( request, VIEW_MODIFY_TAGCLOUD, PARAMETER_TAG_CLOUD_ID, tag.getIdTagCloud( ) );
-    }
-
-    /**
-     * Returns the form for tag modification
-     *
-     * @param request The Http request
-     * @return Html form
-     */
-    @View( value = VIEW_MODIFY_TAG )
-    public String getModifyTag( HttpServletRequest request, Models model )
-    {
-        setPageTitleProperty( PROPERTY_PAGE_TITLE_MODIFY_TAG );
-
-        Tag tag = findTag( request.getParameter( PARAMETER_TAG_CLOUD_ID ), request.getParameter( PARAMETER_TAG_ID ) );
-
-        if ( tag == null )
-        {
-            return redirect( request, AdminMessageService.getMessageUrl( request, MESSAGE_OBJECT_NOT_FOUND, AdminMessage.TYPE_STOP ) );
-        }
-
-        model.put( MARK_TAG, tag );
-        model.put( MARK_LIST_WEIGHT, getListWeight( ) );
-
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_MODIFY_TAG, getLocale( ), model );
-
-        return getAdminPage( template.getHtml( ) );
     }
 
     /**
