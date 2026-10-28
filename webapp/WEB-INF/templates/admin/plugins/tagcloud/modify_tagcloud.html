@@ -1,50 +1,70 @@
+<#include "/admin/plugins/tagcloud/tagcloud_commons.html" />
 <@pageContainer>
     <@pageColumn>
         <@pageHeader title='#i18n{tagcloud.modify_tagcloud.pageTitle}'>
             <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=manageTagClouds' buttonIcon='arrow-left' title='#i18n{portal.util.labelBack}' color='light' />
         </@pageHeader>
         <@messages infos=infos![] errors=errors![] warnings=warnings![] />
-        <@tform method='post' name='modify_tagcloud' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp' boxed=true>
-            <@input type='hidden' name='action' value='modifyTagCloud' />
-            <@input type='hidden' name='tagcloud_id' value='${tagcloud.idTagCloud}' />
-            <@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.modify_tagcloud.name}' mandatory=true rows=2>
-                <@input type='text' name='tagcloud_name' id='tagcloud_name' value='${tagcloud.tagCloudDescription!}' mandatory=true />
-            </@formGroup>
-            <@formGroup rows=2>
-                <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}' color='primary' />
-            </@formGroup>
-        </@tform>
-        <@div class='d-flex justify-content-between align-items-center mt-4 mb-3'>
-            <@h level=2 class='mb-0'>#i18n{tagcloud.modify_tagcloud.titleTagList}</@h>
-            <@offcanvas id='offcanvasCreateTag' targetUrl='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=createTag&amp;tagcloud_id=${tagcloud.idTagCloud}' useIframe=true title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' btnTitle='#i18n{tagcloud.modify_tagcloud.buttonCreate}' btnIcon='plus' btnColor='primary' hideTitle=['xs','sm'] position='end' size='half' />
-        </@div>
-        <#if tag_list?has_content>
-            <@manageFeature id='tag-list'>
-                <#list tag_list as tag>
-                <@manageFeatureItem>
-                    <@manageFeatureItemColumn auto=true flex=false>
-                        <strong>${tag.tagName!}</strong>
-                    </@manageFeatureItemColumn>
-                    <@manageFeatureItemColumn auto=true flex=false valign='top'>
-                        <@p class='fw-bold fs-3'>#i18n{tagcloud.modify_tagcloud.columnTagWeight}</@p>
-                        ${tag.tagWeight!}
-                    </@manageFeatureItemColumn>
-                    <@manageFeatureItemColumn auto=true flex=false valign='top'>
-                        <@p class='fw-bold fs-3'>#i18n{tagcloud.modify_tagcloud.columnTagUrl}</@p>
-                        ${tag.tagUrl!}
-                    </@manageFeatureItemColumn>
-                    <@manageFeatureItemColumn align='end'>
-                        <@offcanvas id='offcanvasModifyTag-${tag.idTag}' targetUrl='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTag&amp;tagcloud_id=${tagcloud.idTagCloud}&amp;tag_id=${tag.idTag}' useIframe=true title='#i18n{portal.util.labelModify}' btnTitle='#i18n{portal.util.labelModify}' btnIcon='edit' btnColor='' btnClass='me-1' hideTitle=['all'] position='end' size='half' />
-                        <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTag&amp;tagcloud_id=${tagcloud.idTagCloud}&amp;tag_id=${tag.idTag}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.modify_tagcloud.actionDeleteTag}' hideTitle=['all'] />
-                    </@manageFeatureItemColumn>
-                </@manageFeatureItem>
-                </#list>
-            </@manageFeature>
-            <#if tag_list?size gte 10><@paginationAdmin paginator=paginator combo=1 /></#if>
-        <#else>
-            <@card>
-                <@empty title='#i18n{portal.util.labelNoItem}' iconName='tag-off' actionTitle='#i18n{tagcloud.modify_tagcloud.buttonCreate}' actionUrl='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=createTag&amp;tagcloud_id=${tagcloud.idTagCloud}' />
-            </@card>
-        </#if>
+        <@row>
+            <@columns xs=12 md=3  lg=2>
+                <@tform method='post' name='modify_tagcloud' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp' boxed=true>
+                    <@input type='hidden' name='action' value='modifyTagCloud' />
+                    <@input type='hidden' name='tagcloud_id' value='${tagcloud.idTagCloud}' />
+                    <@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.modify_tagcloud.name}' mandatory=true rows=2>
+                        <@input type='text' name='tagcloud_name' id='tagcloud_name' value='${tagcloud.tagCloudDescription!}' mandatory=true />
+                    </@formGroup>
+                    <@formGroup rows=2>
+                        <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.modify_tagcloud.buttonLabelValidate}' color='primary' />
+                    </@formGroup>
+                </@tform>
+            </@columns>
+            <@columns xs=12 md=9 lg=10>
+                <@div class='d-flex justify-content-between align-items-center mt-4 mt-lg-0 mb-3'>
+                    <@h level=2 class='mb-0'>#i18n{tagcloud.modify_tagcloud.titleTagList}</@h>
+                    <@button type='button' buttonIcon='plus' title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' color='primary' hideTitle=['xs','sm'] params='data-bs-toggle="modal" data-bs-target="#modalCreateTag"' />
+                </@div>
+                <#if tag_list?has_content>
+                    <@manageFeature id='tag-list'>
+                        <#list tag_list as tag>
+                        <@manageFeatureItem>
+                            <@manageFeatureItemColumn auto=true flex=false valign='top'>
+                                <@p><strong class="me-2 fs-3">${tag.tagName!}</strong> - <em>#i18n{tagcloud.modify_tagcloud.columnTagWeight}</em> : <strong>${tag.tagWeight!}</strong></@p>
+                            </@manageFeatureItemColumn>
+                            <@manageFeatureItemColumn auto=true flex=false valign='top'>
+                                <@p><em>#i18n{tagcloud.modify_tagcloud.columnTagUrl}</em> : <strong>${tag.tagUrl!}</strong></@p>
+                            </@manageFeatureItemColumn>
+                            <@manageFeatureItemColumn align='end'>
+                                <@button type='button' buttonIcon='edit' title='#i18n{portal.util.labelModify}' class='me-1' hideTitle=['all'] params='data-bs-toggle="modal" data-bs-target="#modalModifyTag-${tag.idTag}"' />
+                                <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTag&amp;tagcloud_id=${tagcloud.idTagCloud}&amp;tag_id=${tag.idTag}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.modify_tagcloud.actionDeleteTag}' hideTitle=['all'] />
+                            </@manageFeatureItemColumn>
+                        </@manageFeatureItem>
+                        </#list>
+                    </@manageFeature>
+                    <#if tag_list?size gte 10><@paginationAdmin paginator=paginator combo=1 /></#if>
+                <#else>
+                    <@card>
+                        <@empty title='#i18n{portal.util.labelNoItem}' iconName='tag-off'>
+                            <@div class='empty-action'>
+                                <@button type='button' buttonIcon='plus' title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' color='primary' params='data-bs-toggle="modal" data-bs-target="#modalCreateTag"' />
+                            </@div>
+                        </@empty>
+                    </@card>
+                </#if>
+            </@columns>
+        </@row>
     </@pageColumn>
 </@pageContainer>
+<@modal id='modalCreateTag'>
+    <@modalHeader modalTitle='#i18n{tagcloud.create_tag.pageTitle}' />
+    <@modalBody>
+        <@tagForm formName='create_tag' action='createTag' token=token_create_tag cloudId=tagcloud.idTagCloud />
+    </@modalBody>
+</@modal>
+<#list tag_list as tag>
+<@modal id='modalModifyTag-${tag.idTag}'>
+    <@modalHeader modalTitle='#i18n{tagcloud.modify_tag.pageTitle}' />
+    <@modalBody>
+        <@tagForm formName='modify_tag_${tag.idTag}' action='modifyTag' token=token_modify_tag cloudId=tagcloud.idTagCloud tag=tag />
+    </@modalBody>
+</@modal>
+</#list>

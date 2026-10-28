@@ -1,7 +1,11 @@
+<#include "/admin/plugins/tagcloud/tagcloud_commons.html" />
+<#-- The front office scale of tagcloud.css (tag1 to tag10): same steps, halved on a 0.3rem floor to stay readable -->
+<#assign fontSizes = [0.65, 0.7, 0.75, 0.8, 0.9, 1.0, 1.1, 1.2, 1.4, 1.55] />
+<#assign fontWeights = [100, 200, 300, 400, 500, 600, 700, 800, 900, 900] />
 <@pageContainer>
     <@pageColumn>
         <@pageHeader title='#i18n{tagcloud.manage_tagcloud.page_title}'>
-            <@offcanvas id='offcanvasCreateTagCloud' targetUrl='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=createTagCloud' useIframe=true title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' btnTitle='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' btnIcon='plus' btnColor='primary' hideTitle=['xs','sm'] position='end' size='half' />
+            <@button type='button' buttonIcon='plus' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' color='primary' hideTitle=['xs','sm'] params='data-bs-toggle="modal" data-bs-target="#modalCreateTagCloud"' />
         </@pageHeader>
         <@messages infos=infos![] errors=errors![] warnings=warnings![] />
         <#if tagcloud_list?has_content>
@@ -12,8 +16,19 @@
                         <@link href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&amp;tagcloud_id=${tagcloud.idTagCloud}' title='#i18n{portal.util.labelModify}'>
                             <strong>${tagcloud.tagCloudDescription!}</strong>
                         </@link>
+                        <#assign cloudTags = tags_by_cloud[tagcloud.idTagCloud?c]![] />
+                        <@span class='badge bg-secondary-lt ms-2'>${cloudTags?size} <#if cloudTags?size == 1>#i18n{tagcloud.manage_tagcloud.labelTag}<#else>#i18n{tagcloud.manage_tagcloud.labelTags}</#if></@span>
                     </@manageFeatureItemColumn>
+                    <#if cloudTags?has_content>
+                    <@manageFeatureItemColumn auto=true flex=false class='lh-sm' params='style="max-width:30%"'>
+                        <#list cloudTags as tag>
+                        <#assign tagWeight = [[(tag.tagWeight!'')?matches('\\d+')?then(tag.tagWeight?number, 4), 1]?max, 10]?min />
+                        <@span class='me-2' params='style="font-size:${fontSizes[tagWeight - 1]?c}rem; font-weight:${fontWeights[tagWeight - 1]?c}"'>${tag.tagName!}</@span>
+                        </#list>
+                    </@manageFeatureItemColumn>
+                    </#if>
                     <@manageFeatureItemColumn align='end'>
+                        <@button type='button' buttonIcon='tag-plus' title='#i18n{tagcloud.modify_tagcloud.buttonCreate}' class='me-1' hideTitle=['all'] params='data-bs-toggle="modal" data-bs-target="#modalCreateTag-${tagcloud.idTagCloud}"' />
                         <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=modifyTagCloud&amp;tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='edit' color='' class='me-1' title='#i18n{portal.util.labelModify}' hideTitle=['all'] />
                         <@aButton href='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=confirmRemoveTagCloud&amp;tagcloud_id=${tagcloud.idTagCloud}' buttonIcon='trash' color='danger' title='#i18n{tagcloud.manage_tagcloud.actionDelete}' hideTitle=['all'] />
                     </@manageFeatureItemColumn>
@@ -23,8 +38,35 @@
             <#if tagcloud_list?size gte 10><@paginationAdmin paginator=paginator combo=1 /></#if>
         <#else>
             <@card>
-                <@empty title='#i18n{portal.util.labelNoItem}' iconName='cloud-off' actionTitle='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' actionUrl='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp?view=createTagCloud' />
+                <@empty title='#i18n{portal.util.labelNoItem}' iconName='cloud-off'>
+                    <@div class='empty-action'>
+                        <@button type='button' buttonIcon='plus' title='#i18n{tagcloud.manage_tagcloud.buttonAddTagCloud}' color='primary' params='data-bs-toggle="modal" data-bs-target="#modalCreateTagCloud"' />
+                    </@div>
+                </@empty>
             </@card>
         </#if>
     </@pageColumn>
 </@pageContainer>
+<@modal id='modalCreateTagCloud'>
+    <@modalHeader modalTitle='#i18n{tagcloud.create_tagcloud.pageTitle}' />
+    <@modalBody>
+        <@tform method='post' name='create_tagcloud' action='jsp/admin/plugins/tagcloud/ManageTagClouds.jsp'>
+            <@input type='hidden' name='action' value='createTagCloud' />
+            <@formGroup labelFor='tagcloud_name' labelKey='#i18n{tagcloud.create_tagcloud.name}' mandatory=true rows=2>
+                <@input type='text' name='tagcloud_name' id='tagcloud_name' value='' mandatory=true />
+            </@formGroup>
+            <@formGroup rows=2>
+                <@button type='submit' buttonIcon='check' title='#i18n{tagcloud.create_tagcloud.buttonLabelCreate}' color='primary' />
+                <@button type='button' buttonIcon='x' title='#i18n{portal.util.labelCancel}' color='light' params='data-bs-dismiss="modal"' />
+            </@formGroup>
+        </@tform>
+    </@modalBody>
+</@modal>
+<#list tagcloud_list as tagcloud>
+<@modal id='modalCreateTag-${tagcloud.idTagCloud}'>
+    <@modalHeader modalTitle='#i18n{tagcloud.create_tag.pageTitle} - ${tagcloud.tagCloudDescription!}' />
+    <@modalBody>
+        <@tagForm formName='create_tag_${tagcloud.idTagCloud}' action='createTag' token=token_create_tag cloudId=tagcloud.idTagCloud />
+    </@modalBody>
+</@modal>
+</#list>
